@@ -100,7 +100,7 @@ $versions = array(
 		'module_add' => array(
 			array('acp', 'ACP_CAT_DOT_MODS', 'Comment on Posts'),
 
-			array('acp', 'phpBB Ajax Like', array(
+			array('acp', 'Comment on Posts', array(
 					'module_basename'		=> 'comments',
 					'modes'					=> array('config'),
 				),
