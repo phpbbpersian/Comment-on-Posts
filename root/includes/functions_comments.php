@@ -134,6 +134,8 @@ function show_comment($post_rowid, $topic_id, $forum_id)
 		}
 	}
 	generate_smilies('inline', $forum_id, 'comments');
+
+
 }
 function add_comment($box_id, $topic_id, $forum_id) 
 {
@@ -173,36 +175,37 @@ function add_comment($box_id, $topic_id, $forum_id)
 		'enable_smilies'    => $allow_smilies,
 	);
 		
-	$comedit_update = request_var('commentupdate', '');
+	
 	$sql = 'INSERT INTO ' . COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
 	$db->sql_query($sql);
 	$post_address = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id" . (($start == 0) ? '' : "&amp;start=$start") ."#p$box_id");
-	$pm_subject =  $user->lang['COMMENT_PM_SUBJECT'];
-	$pm_text    = "".sprintf($user->lang['COMMENT_PM'], '<a href="' . $post_address . '">', '</a>',$user->data['username'])." <br />[quote]" .$text. "[/quote]";
 	
-	include($phpbb_root_path . 'includes/functions_privmsgs.' . $phpEx);
+	include_once($phpbb_root_path . 'includes/functions_privmsgs.' . $phpEx);
 	
-	$poll = $uid = $bitfield = $options = ''; 
-	generate_text_for_storage($pm_subject, $uid, $bitfield, $options, false, false, false);
-	generate_text_for_storage($pm_text, $uid, $bitfield, $options, true, true, true);
 	$touser = request_var('poster', 0);
+	$message = "".sprintf($user->lang['COMMENT_PM'], '<a href="' . $post_address . '">', '</a>',$user->data['username'])." <br />[quote]".utf8_normalize_nfc(request_var('comment', '', true))."[/quote]";	
+	$uid = $bitfield = $options = '';
+	$allow_bbcode = $allow_smilies = $allow_urls = true;
+	generate_text_for_storage($message, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
+	$message = generate_text_for_display($message, $uid, $bitfield, $options);
 
-	$data = array( 
-		'address_list'      => array ('u' => array($touser => 'to')),
-		'from_user_id'      => $user->data['user_id'],
-		'from_username'		=> $user->data['username'],
-		'icon_id'           => 0,
-		'from_user_ip'      => $user->data['user_ip'],
-		'enable_bbcode'     => true,
-		'enable_smilies'    => true,
-		'enable_urls'       => true,
-		'enable_sig'        => true,
-		'message'           => $pm_text,
-		'bbcode_bitfield'   => $bitfield,
-		'bbcode_uid'        => $uid,
+	$pm_data = array(
+		'from_user_id'			=> $user->data['user_id'],
+		'from_user_ip'			=> $user->data['user_ip'],
+		'from_username'			=> $user->data['username'],
+		'enable_sig'			=> true,
+		'enable_bbcode'			=> $allow_bbcode,
+		'enable_smilies'		=> $allow_smilies,
+		'enable_urls'			=> $allow_urls,
+		'icon_id'				=> 0,
+		'bbcode_bitfield'		=> $bitfield,
+		'bbcode_uid'			=> $uid,
+		'message'				=> $message,
+		'address_list'			=> array ('u' => array($touser => 'to')),
 	);
 
-	submit_pm('post', $pm_subject, $data, false); 
+
+	submit_pm('post', $user->lang['COMMENT_PM_SUBJECT'], $pm_data, true, false);
 
 	$comment_redirect = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;p=$box_id" . (($start == 0) ? '' : "&amp;start=$start") ."#p$box_id");
 	$comsuccess = $user->lang['COMMENT_SUBMIT_SUCCESS'] . '<br /><br />' . sprintf($user->lang['RETURN_POST'], '<a href="' . $comment_redirect . '">', '</a>');
