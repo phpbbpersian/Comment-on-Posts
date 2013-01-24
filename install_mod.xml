@@ -224,7 +224,7 @@ if ($cdelete_id)
 						<!-- IF comment.U_COMDELETE --><li class="delete-icon"><a href="{comment.U_COMDELETE}" title="{L_DELETE_POST}"><span>{L_DELETE_POST}</span></a></li><!-- ENDIF -->
 					</ul>
 					{comment.COMMENT_DATE}
-					<div class="commentcontent" style="padding-top:10px;font-size:12px;">
+					<div class="commentcontent" style="padding-top:10px;">
 					<!-- IF comment.COMMENT_ID eq COMEDIT_ID -->
 						<!-- INCLUDE posting_buttons.html -->
 						<div id="smiley-box">
@@ -248,7 +248,9 @@ if ($cdelete_id)
                                                 {S_FORM_TOKEN}
 						</div>
 						<!-- ELSE -->
+						<div class="comtext" style="font-size:12px;">
 						{comment.TEXT}
+						</div>
 						<!-- ENDIF -->
 					</div>
 				</div>
