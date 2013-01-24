@@ -183,7 +183,7 @@ function add_comment($box_id, $topic_id, $forum_id)
 	include_once($phpbb_root_path . 'includes/functions_privmsgs.' . $phpEx);
 	
 	$touser = request_var('poster', 0);
-	$message = "".sprintf($user->lang['COMMENT_PM'], '<a href="' . $post_address . '">', '</a>',$user->data['username'])." <br />[quote]".utf8_normalize_nfc(request_var('comment', '', true))."[/quote]";	
+	$message = "".sprintf($user->lang['COMMENT_PM'], '<a href="' . $post_address . '">', '</a>',$user->data['username'], '<br />[quote]'.utf8_normalize_nfc(request_var('comment', '')).'[/quote]');	
 	$uid = $bitfield = $options = '';
 	$allow_bbcode = $allow_smilies = $allow_urls = true;
 	generate_text_for_storage($message, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
