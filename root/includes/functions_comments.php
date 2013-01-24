@@ -147,11 +147,12 @@ function add_comment($box_id, $topic_id, $forum_id)
 			$errors[] = $user->lang['FORM_INVALID'];
 		}
 	
-	$text = utf8_normalize_nfc(request_var('comment', '', true));
-		if (strlen($text) > $config['max_comments_char'] ^ strlen($text) < $config['min_comments_char'] && $config['max_comments_char'] != 0)
+		$text = utf8_normalize_nfc(request_var('comment', '', true));
+
+		if ((($config['max_comments_char'] == 0) ? $config['max_comments_char'] == 0 : mb_strlen($text) > $config['max_comments_char']) ^ mb_strlen($text) < $config['min_comments_char'])
 		{
-			$comment_redirect = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;box=$box_id" . (($start == 0) ? '' : "&amp;start=$start") ."#sendcomment");
-			$comlenerror = (strlen($text) > $config['max_comments_char'] ? sprintf($user->lang['CHARACHTER_LIMIT_MAX'], $config['max_comments_char']) :  sprintf($user->lang['CHARACHTER_LIMIT_MIN'], $config['min_comments_char'])) . '<br /><br />' . sprintf($user->lang['RETURN_COMMENT_SEND'], '<a href="' . $comment_redirect . '">', '</a>');
+			$comment_redirect = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "t=$topic_id&amp;box=$box_id" . (($start == 0) ? '' : "&amp;start=$start") ."#sendcomment");
+			$comlenerror = (mb_strlen($text) > $config['max_comments_char'] ? sprintf($user->lang['CHARACHTER_LIMIT_MAX'], $config['max_comments_char']) :  sprintf($user->lang['CHARACHTER_LIMIT_MIN'], $config['min_comments_char'])) . '<br /><br />' . sprintf($user->lang['RETURN_COMMENT_SEND'], '<a href="' . $comment_redirect . '">', '</a>');
 			trigger_error($comlenerror);
 		}
 	$uid = $bitfield = $options = '';
@@ -244,7 +245,7 @@ function edit_comment($cedit_id)
 }
 function update_comment($forum_id, $topic_id, $post_id, $cedit_id)
 {
-	global $db, $user, $config, $errors, $phpbb_root_path, $phpEx;
+	global $db, $user, $config, $errors, $phpbb_root_path, $start, $phpEx;
 
 	$form_key = 'edit_comment';
 	add_form_key($form_key);
@@ -255,12 +256,13 @@ function update_comment($forum_id, $topic_id, $post_id, $cedit_id)
 		}	
 
 	$text = utf8_normalize_nfc(request_var('comment', '', true));
-	
-		if (strlen($text) > $config['max_comments_char'] ^ strlen($text) < $config['min_comments_char'] && $config['max_comments_char'] != 0)
+		
+		
+		if ((($config['max_comments_char'] == 0) ? $config['max_comments_char'] == 0 : mb_strlen($text) > $config['max_comments_char']) ^ mb_strlen($text) < $config['min_comments_char'])
 		{
 			$limit = request_var('limit', 0);
-			$comment_redirect =  append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;p=$post_id" . (($limit == NULL) ? '' : "&amp;limit=".((($limit == $config['comments_limit']) ? $config['comments_limit'] : $limit))."") ."" . (($start == 0) ? '' : "&amp;start=$start") ."&amp;ce=$cedit_id#c$cedit_id");
-			$comlenerror = (strlen($text) > $config['max_comments_char'] ? sprintf($user->lang['CHARACHTER_LIMIT_MAX'], $config['max_comments_char']) :  sprintf($user->lang['CHARACHTER_LIMIT_MIN'], $config['min_comments_char'])) . '<br /><br />' . sprintf($user->lang['RETURN_COMMENT_EDIT'], '<a href="' . $comment_redirect . '">', '</a>');
+			$comment_redirect =  append_sid("{$phpbb_root_path}viewtopic.$phpEx", "t=$topic_id&amp;p=$post_id" . (($limit == NULL) ? '' : "&amp;limit=".((($limit == $config['comments_limit']) ? $config['comments_limit'] : $limit))."") ."" . (($start == 0) ? '' : "&amp;start=$start") ."&amp;ce=$cedit_id#c$cedit_id");
+			$comlenerror = (mb_strlen($text) > $config['max_comments_char'] ? sprintf($user->lang['CHARACHTER_LIMIT_MAX'], $config['max_comments_char']) :  sprintf($user->lang['CHARACHTER_LIMIT_MIN'], $config['min_comments_char'])) . '<br /><br />' . sprintf($user->lang['RETURN_COMMENT_EDIT'], '<a href="' . $comment_redirect . '">', '</a>');
 			trigger_error($comlenerror);
 		}
 	
@@ -282,7 +284,7 @@ function update_comment($forum_id, $topic_id, $post_id, $cedit_id)
 	);
 
 	$sql = 'UPDATE ' . COMMENTS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . ' WHERE id = ' . $cedit_id . '';
-	$db->sql_query($sql);
+	$result = $db->sql_query($sql);
 	$db->sql_freeresult($result);
 	$comment_redirect = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;p=$post_id#p$post_id");
 	$comsuccess = $user->lang['COMMENT_EDIT_SUCCESS'] . '<br /><br />' . sprintf($user->lang['RETURN_POST'], '<a href="' . $comment_redirect . '">', '</a>');
