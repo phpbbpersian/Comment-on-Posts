@@ -98,11 +98,11 @@ $versions = array(
 
 		
 		'module_add' => array(
-			array('acp', 'ACP_CAT_DOT_MODS', 'Comment on Posts'),
+			array('acp', 'ACP_CAT_DOT_MODS', 'ACP_COMMENTS'),
 
-			array('acp', 'Comment on Posts', array(
+			array('acp', 'ACP_COMMENTS', array(
 					'module_basename'		=> 'comments',
-					'modes'					=> array('config'),
+					'modes'					=> array('settings'),
 				),
 			),
 		),
