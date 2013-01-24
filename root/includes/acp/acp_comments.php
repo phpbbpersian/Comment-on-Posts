@@ -32,10 +32,7 @@ class acp_comments
 			$submit = (isset($_POST['submit'])) ? true : false;
 			$form_key = 'acp_comments';	
 			add_form_key($form_key);	
-if ($submit && !check_form_key($form_key))
-{
-	$error[] = $user->lang['FORM_INVALID'];
-}	
+
 $this->page_title = 'ACP_COMMENTS';
 $this->tpl_name = 'acp_comments';
 $display_vars = array(
@@ -44,20 +41,37 @@ $display_vars = array(
         'legend1'             			=> 'GLOBAL_SETTINGS',
         'enable_comments'               => array('lang' => 'ENABLE_COMMENTS',   'validate' => 'bool',           'type' => 'radio:yes_no',   'explain' => true),
 		'comments_limit'                => array('lang' => 'COMMENTS_LIMIT',    'validate' => 'int:0',          'type' => 'text:5:4',           'explain' => true),
-		'comments_maxchar'              => array('lang' => 'COMMENTS_MAXCHAR',  'validate' => 'int:0',          'type' => 'text:5:4',           'explain' => true),
-		'comments_minchar'              => array('lang' => 'COMMENTS_MINCHAR',  'validate' => 'int:0',          'type' => 'text:5:4',           'explain' => true),
+		'max_comments_char'              => array('lang' => 'COMMENTS_MAXCHAR',  'validate' => 'int:0',          'type' => 'text:5:4',           'explain' => true),
+		'min_comments_char'              => array('lang' => 'COMMENTS_MINCHAR',  'validate' => 'int:1',          'type' => 'text:5:4',           'explain' => true),
 		'comments_order'                => array('lang' => 'COMMENT_ORDER',		'validate' => 'string',			'type' => 'select', 'method' => 'comment_order', 'explain' => true),
 		 
     ), 
 );
  
 $this->new_config = $config;
-$cfg_array = (isset($_REQUEST['config'])) ? request_var('config', array('' => '')) : $this->new_config;
+$cfg_array = (isset($_REQUEST['config'])) ? utf8_normalize_nfc(request_var('config', array('' => ''), true)) : $this->new_config;
 $error = array();
+
+	validate_config_vars($display_vars['vars'], $cfg_array, $error);
+
+	if ($submit && !check_form_key($form_key))
+	{
+		$error[] = $user->lang['FORM_INVALID'];
+	}
+	
+	if (sizeof($error))
+	{
+		$submit = false;
+	}
+
 $template->assign_vars(array(
+			'S_ERROR'			=> (sizeof($error)) ? true : false,
+			'ERROR_MSG'			=> implode('<br />', $error),
 	'U_ACTION'			=> $this->u_action
 ));
-validate_config_vars($display_vars['vars'], $cfg_array, $error);
+
+
+
 foreach ($display_vars['vars'] as $config_name => $null)
 {
 	if (!isset($cfg_array[$config_name]) || strpos($config_name, 'legend') !== false)

@@ -91,8 +91,8 @@ $versions = array(
 		'config_add' => array(
 			array('enable_comments', '1', 0),
 			array('comments_limit', '5', 0),
-			array('comments_maxchar', '0', 0),
-			array('comments_minchar', '0', 0),
+			array('max_comments_char', '0', 0),
+			array('min_comments_char', '1', 0),
 			array('comments_order', 'ASC', 0),
 		),
 

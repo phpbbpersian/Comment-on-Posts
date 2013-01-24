@@ -24,12 +24,12 @@ if (empty($lang) || !is_array($lang))
 // equally where a string contains only two placeholders which are used to wrap text
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
-$lang['permission_cat']['comments'] = 'دیدگاه در پست';
+$lang['permission_cat']['comments'] = 'Comment on Posts';
 $lang = array_merge($lang, array(
-    'acl_m_comedit'  		=> array('lang' => 'می تواند دیدگاه ها را ویرایش کند.', 'cat' => 'comments'),
-    'acl_f_comedit'  	    => array('lang' => 'می تواند دیدگاه های خود را ویرایش کند.', 'cat' => 'comments'),
-    'acl_m_comdelete'  		=> array('lang' => 'می تواند دیدگاه ها را حذف کند.', 'cat' => 'comments'),
-	'acl_f_comdelete'  	    => array('lang' => 'می تواند دیدگاه های خود را حذف کند.', 'cat' => 'comments'),
-	'acl_u_seecom'  	    => array('lang' => 'می تواند دیدگاه ها را ببیند.', 'cat' => 'comments'),
+    'acl_m_comedit'  		=> array('lang' => 'Can edit comments.', 'cat' => 'comments'),
+    'acl_f_comedit'  	    => array('lang' => 'Can edit comments', 'cat' => 'comments'),
+    'acl_m_comdelete'  		=> array('lang' => 'Can delete comments.', 'cat' => 'comments'),
+	'acl_f_comdelete'  	    => array('lang' => 'Can delete comments.', 'cat' => 'comments'),
+	'acl_u_seecom'  	    => array('lang' => 'Can see comments', 'cat' => 'comments'),
 ));
 ?>
