@@ -8,6 +8,9 @@
 		<license><![CDATA[http://opensource.org/licenses/gpl-license.php GNU General Public License v2]]></license>
 		<title lang="en"><![CDATA[Comment on Posts]]></title>
 		<description lang="en"><![CDATA[By this mod, users can send comment on topic posts.]]></description>
+		<author-notes lang="en"><![CDATA[Do not forget to prune template cache.
+Do not forget to set permissions otherwise mod would be disabled.]]></author-notes>
+		<github><![CDATA[https://github.com/phpbbpersian/Comment-on-Posts]]></github>
 		<author-group>
 			<author>
 				<realname><![CDATA[Ali Faraji]]></realname>
@@ -242,6 +245,7 @@ if ($cdelete_id)
 								<textarea id="message" name="comment" style="width:80%; height:70px;font-size:none;">{EDITTEXT}</textarea><br />
 								<input type="submit" accesskey="s" tabindex="6" name="commentupdate" value="{L_SUBMIT}" class="button1 default-submit-action" />
 							</form>
+                                                {S_FORM_TOKEN}
 						</div>
 						<!-- ELSE -->
 						{comment.TEXT}
@@ -291,6 +295,7 @@ if ($cdelete_id)
 				<textarea id="message" name="comment" style="height:170px;"></textarea><br />
 				<input type="submit" accesskey="s" tabindex="6" name="commentsubmit" value="{L_SUBMIT}" class="button1 default-submit-action" />
 			</form>
+                {S_FORM_TOKEN}
 		</div>
 			<fieldset class="submit-buttons">
 			<input type="button" value="{L_MORE_COMMENT}" class="button2" style="padding-top:3px; padding-bottom:3px;" onclick="parent.location='{postrow.MORE_COMMENT}'"></fieldset>
