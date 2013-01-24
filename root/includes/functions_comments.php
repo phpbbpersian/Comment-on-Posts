@@ -137,8 +137,16 @@ function show_comment($post_rowid, $topic_id, $forum_id)
 }
 function add_comment($box_id, $topic_id, $forum_id) 
 {
-	global $db, $start, $config, $phpbb_root_path, $user, $phpEx;
-		
+	global $db, $start, $config, $phpbb_root_path, $user, $errors, $phpEx;
+
+	$form_key = 'send_comment';
+	add_form_key($form_key);
+
+		if (!check_form_key($form_key))
+		{
+			$errors[] = $user->lang['FORM_INVALID'];
+		}
+	
 	$text = utf8_normalize_nfc(request_var('comment', '', true));
 		if (strlen($text) > $config['comments_maxchar'] ^ strlen($text) < $config['comments_minchar'] && $config['comments_maxchar'] != 0 && $config['comments_minchar'] != 0)
 		{
@@ -236,8 +244,16 @@ function edit_comment($cedit_id)
 }
 function update_comment($forum_id, $topic_id, $post_id, $cedit_id)
 {
-	global $db, $user, $config, $phpbb_root_path, $phpEx;
-	
+	global $db, $user, $config, $errors, $phpbb_root_path, $phpEx;
+
+	$form_key = 'edit_comment';
+	add_form_key($form_key);
+
+		if (!check_form_key($form_key))
+		{
+			$errors[] = $user->lang['FORM_INVALID'];
+		}	
+
 	$text = utf8_normalize_nfc(request_var('comment', '', true));
 	
 		if (strlen($text) > $config['comments_maxchar'] ^ strlen($text) < $config['comments_minchar'])
