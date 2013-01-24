@@ -149,7 +149,7 @@ function add_comment($box_id, $topic_id, $forum_id)
 	
 		$text = utf8_normalize_nfc(request_var('comment', '', true));
 
-		if ((($config['max_comments_char'] == 0) ? $config['max_comments_char'] == 0 : mb_strlen($text) > $config['max_comments_char']) ^ mb_strlen($text) < $config['min_comments_char'])
+		if ((($config['max_comments_char'] == 0) ? '' : mb_strlen($text) > $config['max_comments_char']) ^ mb_strlen($text) < $config['min_comments_char'])
 		{
 			$comment_redirect = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "t=$topic_id&amp;box=$box_id" . (($start == 0) ? '' : "&amp;start=$start") ."#sendcomment");
 			$comlenerror = (mb_strlen($text) > $config['max_comments_char'] ? sprintf($user->lang['CHARACHTER_LIMIT_MAX'], $config['max_comments_char']) :  sprintf($user->lang['CHARACHTER_LIMIT_MIN'], $config['min_comments_char'])) . '<br /><br />' . sprintf($user->lang['RETURN_COMMENT_SEND'], '<a href="' . $comment_redirect . '">', '</a>');
@@ -258,9 +258,9 @@ function update_comment($forum_id, $topic_id, $post_id, $cedit_id)
 	$text = utf8_normalize_nfc(request_var('comment', '', true));
 		
 		
-		if ((($config['max_comments_char'] == 0) ? $config['max_comments_char'] == 0 : mb_strlen($text) > $config['max_comments_char']) ^ mb_strlen($text) < $config['min_comments_char'])
+		if ((($config['max_comments_char'] == 0) ? '' : mb_strlen($text) > $config['max_comments_char']) ^ mb_strlen($text) < $config['min_comments_char'])
 		{
-			$limit = request_var('limit', 0);
+			$limit = request_var('limit', 0); 
 			$comment_redirect =  append_sid("{$phpbb_root_path}viewtopic.$phpEx", "t=$topic_id&amp;p=$post_id" . (($limit == NULL) ? '' : "&amp;limit=".((($limit == $config['comments_limit']) ? $config['comments_limit'] : $limit))."") ."" . (($start == 0) ? '' : "&amp;start=$start") ."&amp;ce=$cedit_id#c$cedit_id");
 			$comlenerror = (mb_strlen($text) > $config['max_comments_char'] ? sprintf($user->lang['CHARACHTER_LIMIT_MAX'], $config['max_comments_char']) :  sprintf($user->lang['CHARACHTER_LIMIT_MIN'], $config['min_comments_char'])) . '<br /><br />' . sprintf($user->lang['RETURN_COMMENT_EDIT'], '<a href="' . $comment_redirect . '">', '</a>');
 			trigger_error($comlenerror);
