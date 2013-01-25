@@ -31,6 +31,7 @@ $lang = array_merge($lang, array(
     'acl_m_comdelete'  		=> array('lang' => 'می تواند دیدگاه ها را حذف کند.', 'cat' => 'comments'),
 	'acl_f_comdelete'  	    => array('lang' => 'می تواند دیدگاه های خود را حذف کند.', 'cat' => 'comments'),
 	'acl_f_comsend'  	    => array('lang' => 'می تواند دیدگاه ارسال کند.', 'cat' => 'comments'),
-	'acl_f_seecom'  	    => array('lang' => 'می تواند دیدگاه ها را ببیند.', 'cat' => 'comments'),
+	'acl_u_seecom'  	    => array('lang' => 'می تواند دیدگاه ها را ببیند.', 'cat' => 'comments'),
+	'acl_f_sendcom'  	    => array('lang' => 'می تواند دیدگاه ارسال کند.', 'cat' => 'comments'),
 ));
 ?>

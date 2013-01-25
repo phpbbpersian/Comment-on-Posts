@@ -129,7 +129,7 @@ $template->assign_vars(array(
     'BOX_ID'      	        => $box_id,
 	'COMEDIT_ID'			=> request_var('ce', 0),
 	'ENABLE_COMMENTS'		=> ($config['enable_comments'] == 1) ? true : false,
-	'F_SEECOM'				=> $auth->acl_get('f_seecom', $forum_id),
+	'U_SEECOM'				=> $auth->acl_get('U_seecom'),
 	'F_SENDCOM'				=> $auth->acl_get('f_send', $forum_id),
 ));
 $comment = request_var('commentsubmit', '');
@@ -215,7 +215,7 @@ if ($cdelete_id)
 				<find><![CDATA[			<!-- IF postrow.SIGNATURE --><div id="sig{postrow.POST_ID}" class="signature">{postrow.SIGNATURE}</div><!-- ENDIF -->
 		<!-- ENDIF -->]]></find>
 				<action type="after-add"><![CDATA[		<!-- IF ENABLE_COMMENTS -->
-		<!-- IF F_SEECOM -->
+		<!-- IF U_SEECOM -->
 		<!-- BEGIN comment -->
 			<div id="c{comment.COMMENT_ID}" class="post <!-- IF postrow.S_ROW_COUNT is odd -->bg2<!-- ELSE -->bg1<!-- ENDIF -->" style="-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;">
 				<div class="inner"><span class="corners-top" style="background-image:none;"><span style="background-image:none;"></span></span>

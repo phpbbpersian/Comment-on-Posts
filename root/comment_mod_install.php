@@ -63,18 +63,23 @@ $versions = array(
 			array('m_comedit', 1),
 			array('f_comdelete', 0),
 			array('m_comdelete', 1),
-			array('f_seecom', 0),
+			array('u_seecom', 1),
 			array('f_sendcom', 0),
 		),
 
 		'permission_set' => array(
-			array('REGISTERED', 'f_seecom', 'group', false, true),
-			array('REGISTERED', 'f_sendcom', 'group', false, true),
-			array('REGISTERED', 'f_comdelete', 'group', false, true),
-			array('REGISTERED', 'f_comedit', 'group', false, true),
-			array('GUESTS', 'f_seecom', 'group', false, true),
-			array('GLOBAL_MODERATORS', 'm_comdelete', 'group', true, true),
-			array('GLOBAL_MODERATORS', 'm_comedit', 'group', true, true),
+			// Roles
+			array('ROLE_FORUM_STANDARD', 'f_sendcom', 'role'),
+			array('ROLE_FORUM_STANDARD', 'f_comdelete', 'role'),
+			array('ROLE_FORUM_STANDARD', 'f_comedit', 'role'),
+			array('ROLE_FORUM_FULL', 'f_sendcom', 'role'),
+			array('ROLE_FORUM_FULL', 'f_comdelete', 'role'),
+			array('ROLE_FORUM_FULL', 'f_comedit', 'role'),
+			// Groups
+			array('GUESTS', 'u_seecom', 'group'),
+			array('REGISTERED', 'u_seecom', 'group'),
+			array('GLOBAL_MODERATORS', 'm_comdelete', 'group'),
+			array('GLOBAL_MODERATORS', 'm_comedit', 'group'),
 		),		
 
 		'table_add' => array(

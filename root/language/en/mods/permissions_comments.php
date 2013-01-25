@@ -31,6 +31,7 @@ $lang = array_merge($lang, array(
     'acl_m_comdelete'  		=> array('lang' => 'Can delete comments.', 'cat' => 'comments'),
 	'acl_f_comdelete'  	    => array('lang' => 'Can delete own comments.', 'cat' => 'comments'),
 	'acl_f_comsend'  	    => array('lang' => 'Can send comments.', 'cat' => 'comments'),
-	'acl_f_seecom'  	    => array('lang' => 'Can see comments', 'cat' => 'comments'),
+	'acl_u_seecom'  	    => array('lang' => 'Can see comments', 'cat' => 'comments'),
+	'acl_f_sendcom'  	    => array('lang' => 'Can send comments', 'cat' => 'comments'),
 ));
 ?>
