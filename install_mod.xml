@@ -267,7 +267,7 @@ if ($cdelete_id)
 			</div>
 		<!-- END comment -->
 		
-		<!-- IF F_SENDCOM -->
+		
 		<!-- IF BOX_ID eq postrow.POST_ID -->
 			<h2 id="sendcomment">{L_SEND_COMMENT_TITLE}</h2>
 			<!-- INCLUDE posting_buttons.html -->
