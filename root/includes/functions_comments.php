@@ -27,10 +27,10 @@ if (!defined('IN_PHPBB'))
 */
 function show_comment($post_rowid, $topic_id, $forum_id)
 {
-	global $db, $user, $auth, $config, $template, $user_cache, $start, $cdelete_id, $cedit_id, $post_id, $phpbb_root_path, $phpEx;
+	global $db, $user, $auth, $config, $template, $start, $cdelete_id, $cedit_id, $post_id, $phpbb_root_path, $phpEx;
 
 	$sql_array = array(
-		'SELECT'    => 'c.*, u.user_id, u.username, u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height, u.user_colour',
+		'SELECT'    => 'c.*, u.user_id, u.username, u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height, u.user_colour, u.user_rank',
 		'FROM'      => array(
 			COMMENTS_TABLE => 'c',
 			USERS_TABLE    => 'u'
@@ -110,6 +110,16 @@ function show_comment($post_rowid, $topic_id, $forum_id)
 				trigger_error($comerror);
 			}
 		}
+		
+		$sql = 'SELECT rank_title
+			FROM ' . RANKS_TABLE . '
+			WHERE rank_id = ' . $commentbody['user_rank'] . '';
+		$result = $db->sql_query($sql);
+		$rank = $db->sql_fetchrow($result);
+
+		$db->sql_freeresult($result);
+		
+		
 		$template->assign_block_vars('postrow.comment', array(
 			'TEXT'		    => $text,
 			'COMMENT_DATE'  => $user->format_date($commentbody['comment_time'], false),
@@ -123,9 +133,8 @@ function show_comment($post_rowid, $topic_id, $forum_id)
 			'U_COMDELETE'	=> ($comdelete_allowed) ? append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;p=$post_rowid" . (($start == 0) ? '' : "&amp;start=$start") ."&amp;cd=$linkid") : '',
 			'U_COMDEDIT'	=> ($comedit_allowed) ? append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;p=$post_rowid" . (($limit == NULL) ? '' : "&amp;limit=".((($limit == $config['comments_limit']) ? $config['comments_limit'] : $limit))."") ."" . (($start == 0) ? '' : "&amp;start=$start") ."&amp;ce=$linkid#c$linkid") : '',
 			'U_PROFILE'		=>  append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" .$commentbody['poster_id']. ""),
-			'RANK_TITLE'	=> $user_cache[$commentbody['poster_id']]['rank_title'],
-
-		)); 
+			'RANK_TITLE'	=> $rank['rank_title'],
+		));
 		
 		
 		if ($post_id == $post_rowid && ++$i == ($limit + $config['comments_limit'])) 

@@ -68,13 +68,13 @@ $versions = array(
 		),
 		
 		'permission_set' => array(
-			// Roles
+			/*// Roles
 			array('ROLE_FORUM_STANDARD', 'f_sendcom', 'role'),
 			array('ROLE_FORUM_STANDARD', 'f_comdelete', 'role'),
 			array('ROLE_FORUM_STANDARD', 'f_comedit', 'role'),
 			array('ROLE_FORUM_FULL', 'f_sendcom', 'role'),
 			array('ROLE_FORUM_FULL', 'f_comdelete', 'role'),
-			array('ROLE_FORUM_FULL', 'f_comedit', 'role'),
+			array('ROLE_FORUM_FULL', 'f_comedit', 'role'),*/
 			// Groups
 			array('GUESTS', 'u_seecom', 'group'),
 			array('REGISTERED', 'u_seecom', 'group'),
