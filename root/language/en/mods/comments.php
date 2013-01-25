@@ -44,6 +44,7 @@ $lang = array_merge($lang, array(
     'COMMENT_PM_SUBJECT'			=> 'New comment notification',                     
     'COMMENT_SUBMIT_SUCCESS'		=> 'Your comment has been posted successfully.',
 	'MORE_COMMENT'					=> 'Load more comments',
+	'NOT_ALLOWED_SEND'				=> 'You are not allowed to send comment.',
 	'RETURN_COMMENT_EDIT'			=> '%sBack to comment edit%s',
     'RETURN_COMMENT_SEND'    		=> '%sBack to comment send%s',
 	'SEND_COMMENT'					=> 'Send a comment',

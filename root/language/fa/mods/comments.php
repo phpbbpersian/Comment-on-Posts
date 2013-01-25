@@ -44,6 +44,7 @@ $lang = array_merge($lang, array(
     'COMMENT_PM_SUBJECT'			=> 'دیدگاه جدیدی در پست شما ارسال شده است',                     
     'COMMENT_SUBMIT_SUCCESS'		=> 'دیدگاه با موفقیت ثبت شد.',
 	'MORE_COMMENT'					=> 'بارگذاری دیدگاه بیشتر',
+	'NOT_ALLOWED_SEND'				=> 'اجازه ارسال دیدگاه ندارید.',
 	'RETURN_COMMENT_EDIT'			=> '%sبازگشت به ویرایش دیدگاه%s',
     'RETURN_COMMENT_SEND'    		=> '%sبازگشت به ارسال دیدگاه%s',
 	'SEND_COMMENT'					=> 'ارسال دیدگاه به این پست',
