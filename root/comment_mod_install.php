@@ -117,7 +117,9 @@ $versions = array(
 				),
 			),
 		),
-
+		
+		'cache_purge'  => array('template'),
+		
 	),
 );
 
