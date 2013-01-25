@@ -27,9 +27,10 @@ if (empty($lang) || !is_array($lang))
 $lang['permission_cat']['comments'] = 'Comment on Posts';
 $lang = array_merge($lang, array(
     'acl_m_comedit'  		=> array('lang' => 'Can edit comments.', 'cat' => 'comments'),
-    'acl_f_comedit'  	    => array('lang' => 'Can edit comments', 'cat' => 'comments'),
+    'acl_f_comedit'  	    => array('lang' => 'Can edit own comments', 'cat' => 'comments'),
     'acl_m_comdelete'  		=> array('lang' => 'Can delete comments.', 'cat' => 'comments'),
-	'acl_f_comdelete'  	    => array('lang' => 'Can delete comments.', 'cat' => 'comments'),
+	'acl_f_comdelete'  	    => array('lang' => 'Can delete own comments.', 'cat' => 'comments'),
+	'acl_f_comsend'  	    => array('lang' => 'Can send comments.', 'cat' => 'comments'),
 	'acl_u_seecom'  	    => array('lang' => 'Can see comments', 'cat' => 'comments'),
 ));
 ?>

@@ -83,7 +83,6 @@ $user->setup('mods/comments');
 		'COMMENT_ACTION'	=> append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;box=" .$row['post_id'] . "" . (($start == 0) ? '' : "&amp;start=$start")),
 		'SEND_COMMENT'		=> append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;box=" .$row['post_id'] . "" . (($start == 0) ? '' : "&amp;start=$start") ."#sendcomment"),
 		'MORE_COMMENT'		=> append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;limit=" .((isset($_GET['limit'])) ? $limit : $config['comments_limit']). "&amp;p=" .$row['post_id'] . "" . (($start == 0) ? '' : "&amp;start=$start") ."#p" .$row['post_id']. ""),
-		'U_SEECOM'			=> $auth->acl_get('u_seecom'),
 		'POSTER'			=> $poster_id,
 		// END Comment on Posts]]></action>
 			</edit>
@@ -130,6 +129,8 @@ $template->assign_vars(array(
     'BOX_ID'      	        => $box_id,
 	'COMEDIT_ID'			=> request_var('ce', 0),
 	'ENABLE_COMMENTS'		=> ($config['enable_comments'] == 1) ? true : false,
+	'F_SEECOM'				=> $auth->acl_get('f_seecom', $forum_id),
+	'F_SENDCOM'				=> $auth->acl_get('f_send', $forum_id),
 ));
 $comment = request_var('commentsubmit', '');
 if ($comment) 
@@ -214,7 +215,7 @@ if ($cdelete_id)
 				<find><![CDATA[			<!-- IF postrow.SIGNATURE --><div id="sig{postrow.POST_ID}" class="signature">{postrow.SIGNATURE}</div><!-- ENDIF -->
 		<!-- ENDIF -->]]></find>
 				<action type="after-add"><![CDATA[		<!-- IF ENABLE_COMMENTS -->
-		<!-- IF postrow.U_SEECOM -->
+		<!-- IF F_SEECOM -->
 		<!-- BEGIN comment -->
 			<div id="c{comment.COMMENT_ID}" class="post <!-- IF postrow.S_ROW_COUNT is odd -->bg2<!-- ELSE -->bg1<!-- ENDIF -->" style="-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;">
 				<div class="inner"><span class="corners-top" style="background-image:none;"><span style="background-image:none;"></span></span>
@@ -266,6 +267,7 @@ if ($cdelete_id)
 			</div>
 		<!-- END comment -->
 		
+		<!-- IF F_SENDCOM -->
 		<!-- IF BOX_ID eq postrow.POST_ID -->
 			<h2 id="sendcomment">{L_SEND_COMMENT_TITLE}</h2>
 			<!-- INCLUDE posting_buttons.html -->
@@ -299,11 +301,12 @@ if ($cdelete_id)
 			</form>
                 {S_FORM_TOKEN}
 		</div>
+		<!-- ENDIF -->
 			<fieldset class="submit-buttons">
 			<input type="button" value="{L_MORE_COMMENT}" class="button2" style="padding-top:3px; padding-bottom:3px;" onclick="parent.location='{postrow.MORE_COMMENT}'"></fieldset>
 		<!-- ELSE -->
 			<fieldset class="submit-buttons">
-			<input type="button" value="{L_SEND_COMMENT}" class="button2" style="padding-top:3px; padding-bottom:3px;" onclick="parent.location='{postrow.SEND_COMMENT}'"> 
+			<!-- IF F_SENDCOM --><input type="button" value="{L_SEND_COMMENT}" class="button2" style="padding-top:3px; padding-bottom:3px;" onclick="parent.location='{postrow.SEND_COMMENT}'"><!-- ENDIF -->
 			<input type="button" value="{L_MORE_COMMENT}" class="button2" style="padding-top:3px; padding-bottom:3px;" onclick="parent.location='{postrow.MORE_COMMENT}'"></fieldset>
 		<!-- ENDIF -->
 		<!-- ENDIF -->

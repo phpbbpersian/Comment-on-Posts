@@ -63,8 +63,19 @@ $versions = array(
 			array('m_comedit', 1),
 			array('f_comdelete', 0),
 			array('m_comdelete', 1),
-			array('u_seecom', 1),
+			array('f_seecom', 0),
+			array('f_sendcom', 0),
 		),
+
+		'permission_set' => array(
+			array('REGISTERED', 'f_seecom'),
+			array('REGISTERED', 'f_sendcom'),
+			array('REGISTERED', 'f_comdelete'),
+			array('REGISTERED', 'f_comedit'),
+			array('GUESTS', 'f_seecom'),
+			array('GLOBAL_MODERATORS', 'm_comdelete'),
+			array('GLOBAL_MODERATORS', 'm_comedit'),
+		),		
 
 		'table_add' => array(
 			array($table_prefix . 'comments', array(
