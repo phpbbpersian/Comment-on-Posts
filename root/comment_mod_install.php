@@ -66,7 +66,7 @@ $versions = array(
 			array('u_seecom', 1),
 			array('f_sendcom', 0),
 		),
-
+		/*
 		'permission_set' => array(
 			// Roles
 			array('ROLE_FORUM_STANDARD', 'f_sendcom', 'role'),
@@ -80,7 +80,7 @@ $versions = array(
 			array('REGISTERED', 'u_seecom', 'group'),
 			array('GLOBAL_MODERATORS', 'm_comdelete', 'group'),
 			array('GLOBAL_MODERATORS', 'm_comedit', 'group'),
-		),		
+		),		*/
 
 		'table_add' => array(
 			array($table_prefix . 'comments', array(
