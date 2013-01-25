@@ -130,7 +130,7 @@ $template->assign_vars(array(
 	'COMEDIT_ID'			=> request_var('ce', 0),
 	'ENABLE_COMMENTS'		=> ($config['enable_comments'] == 1) ? true : false,
 	'U_SEECOM'				=> $auth->acl_get('u_seecom'),
-	'F_SENDCOM'				=> $auth->acl_get('f_send', $forum_id),
+	'F_SENDCOM'				=> $auth->acl_get('f_sendcom', $forum_id),
 ));
 $comment = request_var('commentsubmit', '');
 if ($comment) 
