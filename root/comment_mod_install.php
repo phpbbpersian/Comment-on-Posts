@@ -68,13 +68,13 @@ $versions = array(
 		),
 
 		'permission_set' => array(
-			array('REGISTERED', 'f_seecom'),
-			array('REGISTERED', 'f_sendcom'),
-			array('REGISTERED', 'f_comdelete'),
-			array('REGISTERED', 'f_comedit'),
-			array('GUESTS', 'f_seecom'),
-			array('GLOBAL_MODERATORS', 'm_comdelete'),
-			array('GLOBAL_MODERATORS', 'm_comedit'),
+			array('REGISTERED', 'f_seecom', 'group'),
+			array('REGISTERED', 'f_sendcom', 'group'),
+			array('REGISTERED', 'f_comdelete', 'group'),
+			array('REGISTERED', 'f_comedit', 'group'),
+			array('GUESTS', 'f_seecom', 'group'),
+			array('GLOBAL_MODERATORS', 'm_comdelete', 'group'),
+			array('GLOBAL_MODERATORS', 'm_comedit', 'group'),
 		),		
 
 		'table_add' => array(
