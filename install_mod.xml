@@ -217,7 +217,7 @@ if ($cdelete_id)
 				<action type="after-add"><![CDATA[		<!-- IF ENABLE_COMMENTS -->
 		<!-- IF U_SEECOM -->
 		<!-- BEGIN comment -->
-			<div id="c{comment.COMMENT_ID}" class="post <!-- IF postrow.S_ROW_COUNT is odd -->bg2<!-- ELSE -->bg1<!-- ENDIF -->" style="-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;margin-top:25px;">
+			<div id="c{comment.COMMENT_ID}" class="post <!-- IF postrow.S_ROW_COUNT is odd -->bg2<!-- ELSE -->bg1<!-- ENDIF -->" style="-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;">
 				<div class="inner"><span class="corners-top" style="background-image:none;"><span style="background-image:none;"></span></span>
 				<div class="postbody" style="width:85%;">
 					<ul class="profile-icons">
