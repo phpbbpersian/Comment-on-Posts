@@ -60,11 +60,11 @@ function show_comment($post_rowid, $topic_id, $forum_id)
 			(($commentbody['enable_magic_url']) ? OPTION_FLAG_LINKS : 0);
 		$text = generate_text_for_display($commentbody['text'], $commentbody['bbcode_uid'], $commentbody['bbcode_bitfield'], $commentbody['bbcode_options']);
 		$linkid = $commentbody['id'];
-		$comdelete_allowed = ($user->data['is_registered'] && ($auth->acl_get('m_comdelete', $forum_id) || (
+		$comdelete_allowed = ($user->data['is_registered'] && ($auth->acl_get('m_comdelete') || (
 			$user->data['user_id'] == $commentbody['poster_id'] &&
 			$auth->acl_get('f_comdelete', $forum_id)
 		)));
-		$comedit_allowed = ($user->data['is_registered'] && ($auth->acl_get('m_comedit', $forum_id) || (
+		$comedit_allowed = ($user->data['is_registered'] && ($auth->acl_get('m_comedit') || (
 			$user->data['user_id'] == $commentbody['poster_id'] &&
 			$auth->acl_get('f_comedit', $forum_id)
 		)));
@@ -78,7 +78,7 @@ function show_comment($post_rowid, $topic_id, $forum_id)
 			login_box('', $user->lang['COMMENT_EDIT_LOGIN']);
 		}
 
-		if ($cdelete_id && $auth->acl_get('f_comdelete', $forum_id) && !$auth->acl_get('m_comdelete', $forum_id)) 
+		if ($cdelete_id && $auth->acl_get('f_comdelete', $forum_id) && !$auth->acl_get('m_comdelete')) 
 		{
 			$sql = 'SELECT poster_id
 				FROM ' . COMMENTS_TABLE . ' 
