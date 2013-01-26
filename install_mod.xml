@@ -33,6 +33,13 @@ Do not forget to set permissions otherwise mod would be disabled.]]></author-not
 					<change><![CDATA[First dev release]]></change>
 				</changelog>
 			</entry>
+			<entry>
+				<date>2013-01-26</date>
+				<rev-version>0.2.0</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[New ajax feature (Comment send)]]></change>
+				</changelog>
+			</entry>
 		</history>
 	</header>
 	<action-group>
@@ -46,6 +53,7 @@ Do not forget to set permissions otherwise mod would be disabled.]]></author-not
 			<file from="root/language/en/mods/permissions_comments.php" to="language/en/mods/permissions_comments.php"/>
 			<file from="root/umil/*.*" to="umil/*.*"/>
 			<file from="root/comment_mod_install.php" to="comment_mod_install.php"/>
+			<file from="root/styles/prosilver/template/jquery.js" to="styles/prosilver/template/jquery.js"/>
 		</copy>
 		<open src="viewtopic.php">
 			<edit>
@@ -81,8 +89,8 @@ $user->setup('mods/comments');
 				<action type="after-add"><![CDATA[		// BEGIN Comment on Posts
 		'COMLIMIT'			=> ((isset($_GET['limit'])) ? request_var('limit', 0) : 0) + $config['comments_limit'],
 		'COMMENT_ACTION'	=> append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;box=" .$row['post_id'] . "" . (($start == 0) ? '' : "&amp;start=$start")),
-		'SEND_COMMENT'		=> append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;box=" .$row['post_id'] . "" . (($start == 0) ? '' : "&amp;start=$start") ."#sendcomment"),
-		'MORE_COMMENT'		=> append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;limit=" .((isset($_GET['limit'])) ? $limit : $config['comments_limit']). "&amp;p=" .$row['post_id'] . "" . (($start == 0) ? '' : "&amp;start=$start") ."#p" .$row['post_id']. ""),
+		'SEND_COMMENT'		=> append_sid("{$phpbb_root_path}viewtopic.$phpEx", "t=$topic_id&amp;box=" .$row['post_id'] . "" . (($start == 0) ? '' : "&amp;start=$start") ."#sendcomment"),
+		'MORE_COMMENT'		=> append_sid("{$phpbb_root_path}viewtopic.$phpEx", "t=$topic_id&amp;limit=" .((isset($_GET['limit'])) ? $limit : $config['comments_limit']). "&amp;p=" .$row['post_id'] . "" . (($start == 0) ? '' : "&amp;start=$start") ."#p" .$row['post_id']. ""),
 		'POSTER'			=> $poster_id,
 		// END Comment on Posts]]></action>
 			</edit>
@@ -210,6 +218,12 @@ if ($cdelete_id)
 			}]]></action>
 			</edit>
 		</open>
+		<open src="styles/prosilver/template/overall_header.html">
+			<edit>
+				<find><![CDATA[<script type="text/javascript" src="{T_SUPER_TEMPLATE_PATH}/forum_fn.js"></script>]]></find>
+				<action type="after-add"><![CDATA[<script type="text/javascript" src="{T_SUPER_TEMPLATE_PATH}/jquery.js"></script>]]></action>
+			</edit>
+		</open>
 		<open src="styles/prosilver/template/viewtopic_body.html">
 			<edit>
 				<find><![CDATA[			<!-- IF postrow.SIGNATURE --><div id="sig{postrow.POST_ID}" class="signature">{postrow.SIGNATURE}</div><!-- ENDIF -->
@@ -245,8 +259,9 @@ if ($cdelete_id)
 								<input type="hidden" value="{postrow.POST_ID}" name="post_id" />
 								<textarea id="message" name="comment" style="width:80%; height:70px;font-size:none;">{EDITTEXT}</textarea><br />
 								<input type="submit" accesskey="s" tabindex="6" name="commentupdate" value="{L_SUBMIT}" class="button1 default-submit-action" />
+							{S_FORM_TOKEN}
 							</form>
-                                                {S_FORM_TOKEN}
+
 						</div>
 						<!-- ELSE -->
 						<div class="comtext" style="font-size:12px;">
@@ -293,24 +308,44 @@ if ($cdelete_id)
 				</div>
 
 		<div id="message-box">
-			<form id="postform" method="post" action="{postrow.COMMENT_ACTION}">
-				<input type="hidden" value="{postrow.POST_ID}" name="post_id" />
-				<input type="hidden" value="{postrow.POSTER}" name="poster" />
+			<form id="postform" method="post">
+				<input type="hidden" value="{postrow.POST_ID}" id="post_id" />
+				<input type="hidden" value="{postrow.POSTER}" id="poster" />
 				<!-- IF F_SENDCOM -->
-					<textarea id="message" name="comment" style="height:170px;"></textarea><br />
+					<textarea id="message" style="height:170px;"></textarea><br />
 				<!-- ELSE -->
-					<textarea id="message" name="comment" style="height:170px;" disabled>{L_NOT_ALLOWED_SEND}</textarea><br />
+					<textarea id="message" style="height:170px;" disabled>{L_NOT_ALLOWED_SEND}</textarea><br />
 				<!-- ENDIF -->
-				<input type="submit" accesskey="s" tabindex="6" name="commentsubmit" value="{L_SUBMIT}" class="button1 default-submit-action" />
+				<input type="submit" accesskey="s" tabindex="6" value="{L_SUBMIT}" class="button1 default-submit-action" id="commentsubmit" />
+				{S_FORM_TOKEN}
 			</form>
-                {S_FORM_TOKEN}
+
+			<script type="text/javascript">		
+			$(document).ready(function(){
+				$('#commentsubmit').click(function(){
+					var message = $("textarea#message").val();
+					var post_id = $("input#post_id").val();
+					var poster = $("input#poster").val();
+					var commentsubmit = $("input#commentsubmit").val();
+				
+					$.post("{postrow.COMMENT_ACTION}", { comment: message, post_id: post_id, poster: poster, commentsubmit: commentsubmit},
+						function(data){
+							$("#p{postrow.POST_ID}").load('viewtopic.php?p={postrow.POST_ID}' + " #p{postrow.POST_ID}>*", "");
+							$('html, body').animate({scrollTop:$('#scrollpoint{postrow.POST_ID}').position().top}, 'slow');	
+						});
+				
+					return false;
+					});
+				});
+			</script>
+
 		</div>
 			<fieldset class="submit-buttons">
-			<input type="button" value="{L_MORE_COMMENT}" class="button2" style="padding-top:3px; padding-bottom:3px;" onclick="parent.location='{postrow.MORE_COMMENT}'"></fieldset>
+			<a href="{postrow.MORE_COMMENT}" class="button2" style="padding-top:3px; padding-bottom:3px;" >{L_MORE_COMMENT}</a></fieldset>
 		<!-- ELSE -->
 			<fieldset class="submit-buttons">
-			<!-- IF F_SENDCOM --><input type="button" value="{L_SEND_COMMENT}" class="button2" style="padding-top:3px; padding-bottom:3px;" onclick="parent.location='{postrow.SEND_COMMENT}'"><!-- ENDIF -->
-			<input type="button" value="{L_MORE_COMMENT}" class="button2" style="padding-top:3px; padding-bottom:3px;" onclick="parent.location='{postrow.MORE_COMMENT}'"></fieldset>
+			<!-- IF F_SENDCOM --><a href="{postrow.SEND_COMMENT}" class="button2" style="padding-top:3px; padding-bottom:3px;">{L_SEND_COMMENT}</a><!-- ENDIF -->
+			<a href="{postrow.MORE_COMMENT}" value="{L_MORE_COMMENT}" class="button2" style="padding-top:3px; padding-bottom:3px;">{L_MORE_COMMENT}</a></fieldset>
 		<!-- ENDIF -->
 		<!-- ENDIF -->
 		<!-- ENDIF -->]]></action>
