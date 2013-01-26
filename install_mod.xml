@@ -324,6 +324,7 @@ if ($cdelete_id)
 			<script type="text/javascript">		
 			$(document).ready(function(){
 				$('#commentsubmit').click(function(){
+					$('#commentsubmit').hide();
 					var message = $("textarea#message").val();
 					var post_id = $("input#post_id").val();
 					var poster = $("input#poster").val();
