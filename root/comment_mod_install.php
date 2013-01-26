@@ -109,7 +109,7 @@ $versions = array(
 			array('comments_limit', '5', 0),
 			array('max_comments_char', '0', 0),
 			array('min_comments_char', '1', 0),
-			array('comments_order', 'ASC', 0),
+			array('comments_order', 'DESC', 0),
 		),
 
 		
