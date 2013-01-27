@@ -60,7 +60,8 @@ Do not forget to set permissions otherwise mod would be disabled.]]></author-not
 			<file from="root/language/en/mods/permissions_comments.php" to="language/en/mods/permissions_comments.php"/>
 			<file from="root/umil/*.*" to="umil/*.*"/>
 			<file from="root/comment_mod_install.php" to="comment_mod_install.php"/>
-			<file from="root/styles/prosilver/template/js/*.*" to="styles/prosilver/template/js/*.*"/>
+			<file from="root/styles/prosilver/template/js/jquery.js" to="styles/prosilver/template/js/jquery.js"/>
+			<file from="root/styles/prosilver/template/js/comments.js" to="styles/prosilver/template/js/comments.js"/>
 		</copy>
 		<open src="viewtopic.php">
 			<edit>
