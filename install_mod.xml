@@ -229,7 +229,7 @@ if ($cdelete_id)
 		<open src="styles/prosilver/template/overall_header.html">
 			<edit>
 				<find><![CDATA[<script type="text/javascript" src="{T_SUPER_TEMPLATE_PATH}/forum_fn.js"></script>]]></find>
-				<action type="after-add"><![CDATA[<script type="text/javascript" src="{T_SUPER_TEMPLATE_PATH}/jquery.js"></script>
+				<action type="after-add"><![CDATA[<script type="text/javascript" src="{T_SUPER_TEMPLATE_PATH}/js/jquery.js"></script>
 <script src="{T_SUPER_TEMPLATE_PATH}/js/comments.js"></script> ]]></action>
 			</edit>
 		</open>
