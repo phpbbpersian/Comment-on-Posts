@@ -19,7 +19,7 @@ Do not forget to set permissions otherwise mod would be disabled.]]></author-not
 				<email><![CDATA[phpbbpersian@gmail.com]]></email>
 			</author>
 		</author-group>
-		<mod-version>0.2.0</mod-version>
+		<mod-version>0.3.0</mod-version>
 		<installation>
 			<level>easy</level>
 			<time>300</time>
@@ -40,6 +40,13 @@ Do not forget to set permissions otherwise mod would be disabled.]]></author-not
 					<change><![CDATA[New ajax feature (Comment send)]]></change>
 				</changelog>
 			</entry>
+			<entry>
+				<date>2013-01-27</date>
+				<rev-version>0.3.0</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[New ajax feature (Edit comment)]]></change>
+				</changelog>
+			</entry>
 		</history>
 	</header>
 	<action-group>
@@ -53,7 +60,7 @@ Do not forget to set permissions otherwise mod would be disabled.]]></author-not
 			<file from="root/language/en/mods/permissions_comments.php" to="language/en/mods/permissions_comments.php"/>
 			<file from="root/umil/*.*" to="umil/*.*"/>
 			<file from="root/comment_mod_install.php" to="comment_mod_install.php"/>
-			<file from="root/styles/prosilver/template/jquery.js" to="styles/prosilver/template/jquery.js"/>
+			<file from="root/styles/prosilver/template/js/*.*" to="styles/prosilver/template/js/*.*"/>
 		</copy>
 		<open src="viewtopic.php">
 			<edit>
@@ -139,6 +146,7 @@ $template->assign_vars(array(
 	'ENABLE_COMMENTS'		=> ($config['enable_comments'] == 1) ? true : false,
 	'U_SEECOM'				=> $auth->acl_get('u_seecom'),
 	'F_SENDCOM'				=> $auth->acl_get('f_sendcom', $forum_id),
+	'LIMIT' 				=> request_var('limit', 0),
 ));
 $comment = request_var('commentsubmit', '');
 if ($comment) 
@@ -221,7 +229,8 @@ if ($cdelete_id)
 		<open src="styles/prosilver/template/overall_header.html">
 			<edit>
 				<find><![CDATA[<script type="text/javascript" src="{T_SUPER_TEMPLATE_PATH}/forum_fn.js"></script>]]></find>
-				<action type="after-add"><![CDATA[<script type="text/javascript" src="{T_SUPER_TEMPLATE_PATH}/jquery.js"></script>]]></action>
+				<action type="after-add"><![CDATA[<script type="text/javascript" src="{T_SUPER_TEMPLATE_PATH}/jquery.js"></script>
+<script src="{T_SUPER_TEMPLATE_PATH}/js/comments.js"></script> ]]></action>
 			</edit>
 		</open>
 		<open src="styles/prosilver/template/viewtopic_body.html">
@@ -256,13 +265,12 @@ if ($cdelete_id)
 
 						</div>
 						<div id="message-box">
-							<form id="postform" method="post" action="#">
-								<input type="hidden" value="{postrow.POST_ID}" name="post_id" />
-								<textarea id="message" name="comment" style="width:80%; height:70px;font-size:none;">{EDITTEXT}</textarea><br />
-								<input type="submit" accesskey="s" tabindex="6" name="commentupdate" value="{L_SUBMIT}" class="button1 default-submit-action" />
+							<form id="postform" method="post">
+								<input id="post_id" type="hidden" value="{postrow.POST_ID}" />
+								<textarea id="message" style="width:80%; height:70px;font-size:none;">{EDITTEXT}</textarea><br />
+								<input type="submit" accesskey="s" tabindex="6" value="{L_SUBMIT}" class="button1 default-submit-action" id="commentupdate" onclick="ajax_edit_comment(this, '{postrow.POST_ID}', '{comment.COMMENT_ID}', '{LIMIT}'); return false;" />
 							{S_FORM_TOKEN}
 							</form>
-
 						</div>
 						<!-- ELSE -->
 						<div class="comtext" style="font-size:12px;">
@@ -317,31 +325,11 @@ if ($cdelete_id)
 				<!-- ELSE -->
 					<textarea id="message" style="height:170px;" disabled>{L_NOT_ALLOWED_SEND}</textarea><br />
 				<!-- ENDIF -->
-				<input type="submit" accesskey="s" tabindex="6" value="{L_SUBMIT}" class="button1 default-submit-action" id="commentsubmit" />
+				<input type="submit" accesskey="s" tabindex="6" value="{L_SUBMIT}" class="button1 default-submit-action" id="commentsubmit" onclick="ajax_add_comment(this, '{postrow.POST_ID}','{postrow.COMMENT_ACTION}'); return false;" />
 				{S_FORM_TOKEN}
 			</form>
-
-			<script type="text/javascript">		
-			$(document).ready(function(){
-				$('#commentsubmit').click(function(){
-					$('#commentsubmit').hide();
-					var message = $("textarea#message").val();
-					var post_id = $("input#post_id").val();
-					var poster = $("input#poster").val();
-					var commentsubmit = $("input#commentsubmit").val();
-				
-					$.post("{postrow.COMMENT_ACTION}", { comment: message, post_id: post_id, poster: poster, commentsubmit: commentsubmit},
-						function(data){
-							$("#p{postrow.POST_ID}").load('viewtopic.php?p={postrow.POST_ID}' + " #p{postrow.POST_ID}>*", "");
-							$('html, body').animate({scrollTop:$('#scrollpoint{postrow.POST_ID}').position().top}, 'slow');	
-						});
-				
-					return false;
-					});
-				});
-			</script>
-
 		</div>
+
 			<fieldset class="submit-buttons">
 			<a href="{postrow.MORE_COMMENT}" class="button2" style="padding-top:3px; padding-bottom:3px;" >{L_MORE_COMMENT}</a></fieldset>
 		<!-- ELSE -->
