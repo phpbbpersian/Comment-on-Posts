@@ -5,7 +5,7 @@
 
 function ajax_edit_form(postid, posterid, commentid, limit, path){
 	$(document).ready(function(){ 
-	$("#message-box").load(""+ path +"?p="+ postid +"&limit="+ limit +"&ce="+ commentid +"" + " #message-box>*", "");
+	$("#commentsending").load(""+ path +"?p="+ postid +"&limit="+ limit +"&ce="+ commentid +"" + " #commentsending>*", "");
 		$('<div></div>').appendTo('body')
 			$("#commentsending")
             .dialog({
