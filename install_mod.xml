@@ -47,6 +47,13 @@ Do not forget to set permissions otherwise mod would be disabled.]]></author-not
 					<change><![CDATA[New ajax feature (Edit comment)]]></change>
 				</changelog>
 			</entry>
+			<entry>
+				<date>2013-01-30</date>
+				<rev-version>0.6.0</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[New ajax features (loading forms, deleting comments, pagination). AJAX milestone is completed.]]></change>
+				</changelog>
+			</entry>
 		</history>
 	</header>
 	<action-group>
@@ -62,6 +69,9 @@ Do not forget to set permissions otherwise mod would be disabled.]]></author-not
 			<file from="root/comment_mod_install.php" to="comment_mod_install.php"/>
 			<file from="root/styles/prosilver/template/js/jquery.js" to="styles/prosilver/template/js/jquery.js"/>
 			<file from="root/styles/prosilver/template/js/comments.js" to="styles/prosilver/template/js/comments.js"/>
+			<file from="root/styles/prosilver/template/js/jquery-ui.js" to="styles/prosilver/template/js/jquery-ui.js"/>
+			<file from="root/styles/prosilver/template/js/jquery-ui.css" to="styles/prosilver/template/js/jquery-ui.css"/>
+			<file from="root/styles/prosilver/template/js/images/*.*" to="styles/prosilver/template/js/images/*.*"/>
 		</copy>
 		<open src="viewtopic.php">
 			<edit>
@@ -142,13 +152,15 @@ $template->assign_vars(array(
 	'FLASH_STATUS'			=> ($flash_status) ? $user->lang['FLASH_IS_ON'] : $user->lang['FLASH_IS_OFF'],
 	'URL_STATUS'			=> ($bbcode_status && $url_status) ? $user->lang['URL_IS_ON'] : $user->lang['URL_IS_OFF'],
 	'SMILIES_STATUS'		=> ($smilies_status) ? $user->lang['SMILIES_ARE_ON'] : $user->lang['SMILIES_ARE_OFF'],
-    'BOX_ID'      	        => $box_id,
-	'COMEDIT_ID'			=> request_var('ce', 0),
 	'ENABLE_COMMENTS'		=> ($config['enable_comments'] == 1) ? true : false,
 	'U_SEECOM'				=> $auth->acl_get('u_seecom'),
 	'F_SENDCOM'				=> $auth->acl_get('f_sendcom', $forum_id),
 	'LIMIT' 				=> request_var('limit', 0),
+	'COMMENT_PATH'			=> append_sid("{$phpbb_root_path}viewtopic.$phpEx"),
+	'MAX_COMMENTS_CHAR'		=> $config['max_comments_char'],
+	'MIN_COMMENTS_CHAR'		=> $config['min_comments_char'],
 ));
+
 $comment = request_var('commentsubmit', '');
 if ($comment) 
 {
@@ -168,6 +180,16 @@ if ($cdelete_id)
 {
 	delete_comment($forum_id, $topic_id, $post_id, $cdelete_id);
 }
+// AJAX variables
+$template->assign_vars(array(
+	'LIMIT' 				=> request_var('limit', 0),
+	'COMMENT_PATH'			=> append_sid("{$phpbb_root_path}viewtopic.$phpEx"),
+	'MAX_COMMENTS_CHAR'		=> $config['max_comments_char'],
+	'MIN_COMMENTS_CHAR'		=> $config['min_comments_char'],
+	'MAX_CHAR_ERROR'		=> sprintf($user->lang['CHARACHTER_LIMIT_MAX'], $config['max_comments_char']),
+	'MIN_CHAR_ERROR'		=> sprintf($user->lang['CHARACHTER_LIMIT_MIN'], $config['min_comments_char'])
+));
+	generate_smilies('inline', $forum_id, 'comments');
 // END Comment on Posts]]></action>
 			</edit>
 		</open>
@@ -175,56 +197,6 @@ if ($cdelete_id)
 			<edit>
 				<find><![CDATA[// Additional tables]]></find>
 				<action type="after-add"><![CDATA[define('COMMENTS_TABLE',			$table_prefix . 'comments');]]></action>
-			</edit>
-		</open>
-		<open src="includes/functions_posting.php">
-			<edit>
-				<find><![CDATA[function generate_smilies($mode, $forum_id)]]></find>
-				<action type="replace-with"><![CDATA[function generate_smilies($mode, $forum_id, $place = 'posting')]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[		foreach ($smilies as $row)
-		{
-			$template->assign_block_vars('smiley', array(
-				'SMILEY_CODE'	=> $row['code'],
-				'A_SMILEY_CODE'	=> addslashes($row['code']),
-				'SMILEY_IMG'	=> $root_path . $config['smilies_path'] . '/' . $row['smiley_url'],
-				'SMILEY_WIDTH'	=> $row['smiley_width'],
-				'SMILEY_HEIGHT'	=> $row['smiley_height'],
-				'SMILEY_DESC'	=> $row['emotion'])
-			);
-		}]]></find>
-				<action type="replace-with"><![CDATA[			switch ($place)
-			{
-				
-				case 'posting':
-					foreach ($smilies as $row)
-					{
-						$template->assign_block_vars('smiley', array(
-							'SMILEY_CODE'	=> $row['code'],
-							'A_SMILEY_CODE'	=> addslashes($row['code']),
-							'SMILEY_IMG'	=> $root_path . $config['smilies_path'] . '/' . $row['smiley_url'],
-							'SMILEY_WIDTH'	=> $row['smiley_width'],
-							'SMILEY_HEIGHT'	=> $row['smiley_height'],
-							'SMILEY_DESC'	=> $row['emotion'])
-						);
-					}
-				break;
-
-				case 'comments':
-					foreach ($smilies as $row)
-					{
-						$template->assign_block_vars('postrow.smiley', array(
-							'SMILEY_CODE'	=> $row['code'],
-							'A_SMILEY_CODE'	=> addslashes($row['code']),
-							'SMILEY_IMG'	=> $root_path . $config['smilies_path'] . '/' . $row['smiley_url'],
-							'SMILEY_WIDTH'	=> $row['smiley_width'],
-							'SMILEY_HEIGHT'	=> $row['smiley_height'],
-							'SMILEY_DESC'	=> $row['emotion'])
-						);
-					}
-				break;
-			}]]></action>
 			</edit>
 		</open>
 		<open src="styles/prosilver/template/overall_header.html">
@@ -246,38 +218,14 @@ if ($cdelete_id)
 				<div class="inner"><span class="corners-top" style="background-image:none;"><span style="background-image:none;"></span></span>
 				<div class="postbody" style="width:85%;">
 					<ul class="profile-icons">
-						<!-- IF comment.U_COMDEDIT  --><li class="edit-icon"><a href="{comment.U_COMDEDIT}" title="{L_EDIT_POST}"><span>{L_EDIT_POST}</span></a></li><!-- ENDIF -->
-						<!-- IF comment.U_COMDELETE --><li class="delete-icon"><a href="{comment.U_COMDELETE}" title="{L_DELETE_POST}"><span>{L_DELETE_POST}</span></a></li><!-- ENDIF -->
+						<!-- IF comment.U_COMDEDIT  --><li class="edit-icon"><a href="javascript:void(0);" onclick="ajax_edit_form('{postrow.POST_ID}', '{postrow.POSTER_ID}', '{comment.COMMENT_ID}', '{LIMIT}', '{COMMENT_PATH}');" title="{L_EDIT_POST}"><span>{L_EDIT_POST}</span></a></li><!-- ENDIF -->
+						<!-- IF comment.U_COMDELETE --><li class="delete-icon"><a href="javascript:void(0);" onclick="ajax_delete_comment('{postrow.POST_ID}', '{comment.COMMENT_ID}', '{LIMIT}', '{COMMENT_PATH}');" title="{L_DELETE_POST}"><span>{L_DELETE_POST}</span></a></li><!-- ENDIF -->
 					</ul>
 					{comment.COMMENT_DATE}
 					<div class="commentcontent" style="padding-top:10px;">
-					<!-- IF comment.COMMENT_ID eq COMEDIT_ID -->
-						<!-- INCLUDE posting_buttons.html -->
-						<div id="smiley-box">
-							<!-- IF BBCODE_STATUS -->
-								{BBCODE_STATUS}<br />
-								<!-- IF S_BBCODE_ALLOWED -->
-									{IMG_STATUS}<br />
-									{FLASH_STATUS}<br />
-									{URL_STATUS}<br />
-								<!-- ENDIF -->
-								{SMILIES_STATUS}
-							<!-- ENDIF -->
-
-						</div>
-						<div id="message-box">
-							<form id="postform" method="post">
-								<input id="post_id" type="hidden" value="{postrow.POST_ID}" />
-								<textarea id="message" style="width:80%; height:70px;font-size:none;">{EDITTEXT}</textarea><br />
-								<input type="submit" accesskey="s" tabindex="6" value="{L_SUBMIT}" class="button1 default-submit-action" id="commentupdate" onclick="ajax_edit_comment(this, '{postrow.POST_ID}', '{comment.COMMENT_ID}', '{LIMIT}'); return false;" />
-							{S_FORM_TOKEN}
-							</form>
-						</div>
-						<!-- ELSE -->
 						<div class="comtext" style="font-size:12px;">
 						{comment.TEXT}
 						</div>
-						<!-- ENDIF -->
 					</div>
 				</div>
 			<dl class="postprofile" style="width:14%;">
@@ -291,13 +239,21 @@ if ($cdelete_id)
 			<span class="corners-bottom" style="background-image:none;"><span style="background-image:none;"></span></span></div>
 			</div>
 		<!-- END comment -->
-		
-		
-		<!-- IF BOX_ID eq postrow.POST_ID -->
-			<h2 id="sendcomment">{L_SEND_COMMENT_TITLE}</h2>
+		<div id="commentscroll{postrow.POST_ID}"></div>
+			<fieldset class="submit-buttons">
+			<!-- IF F_SENDCOM --><a href="javascript:void(0);" onclick="ajax_send_form('{postrow.COMMENT_ACTION}', '{postrow.POSTER_ID}', '{postrow.POST_ID}', '{LIMIT}', '{COMMENT_PATH}');" class="button2" style="padding-top:3px; padding-bottom:3px;">{L_SEND_COMMENT}</a><!-- ENDIF -->
+			<a href="javascript:void(0);" onclick="ajax_pagination('{postrow.MORE_COMMENT}', '{postrow.POST_ID}', '{LIMIT}');" class="button2" style="padding-top:3px; padding-bottom:3px;">{L_MORE_COMMENT}</a></fieldset>
+		<!-- ENDIF -->
+		<!-- ENDIF -->]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[<!-- END postrow -->]]></find>
+				<action type="after-add"><![CDATA[<!-- IF ENABLE_COMMENTS -->
+	<!-- IF F_SENDCOM -->
+	<div id="commentsending">
 			<!-- INCLUDE posting_buttons.html -->
 				<div id="smiley-box">
-					<!-- IF S_SMILIES_ALLOWED and .postrow.smiley -->
+					<!-- IF S_SMILIES_ALLOWED and smiley -->
 					<strong>{L_SMILIES}</strong><br />
 						<!-- BEGIN smiley -->
 							<a href="#" onclick="insert_text('{smiley.A_SMILEY_CODE}', true); return false;"><img src="{smiley.SMILEY_IMG}" width="{smiley.SMILEY_WIDTH}" height="{smiley.SMILEY_HEIGHT}" alt="{smiley.SMILEY_CODE}" title="{smiley.SMILEY_DESC}" /></a>
@@ -319,27 +275,40 @@ if ($cdelete_id)
 
 		<div id="message-box">
 			<form id="postform" method="post">
-				<input type="hidden" value="{postrow.POST_ID}" id="post_id" />
-				<input type="hidden" value="{postrow.POSTER}" id="poster" />
+
 				<!-- IF F_SENDCOM -->
-					<textarea id="message" style="height:170px;"></textarea><br />
+					<textarea id="message" style="height:170px;width:850px;">{EDITTEXT}</textarea><br />
 				<!-- ELSE -->
-					<textarea id="message" style="height:170px;" disabled>{L_NOT_ALLOWED_SEND}</textarea><br />
+					<textarea id="message" style="height:170px; width: 30%;" disabled>{L_NOT_ALLOWED_SEND}</textarea><br />
 				<!-- ENDIF -->
-				<input type="submit" accesskey="s" tabindex="6" value="{L_SUBMIT}" class="button1 default-submit-action" id="commentsubmit" onclick="ajax_add_comment(this, '{postrow.POST_ID}','{postrow.COMMENT_ACTION}'); return false;" />
+				<input type="hidden" accesskey="s" tabindex="6" value="{L_SUBMIT}" class="button1 default-submit-action" id="commentsubmit" />
 				{S_FORM_TOKEN}
 			</form>
 		</div>
-
-			<fieldset class="submit-buttons">
-			<a href="{postrow.MORE_COMMENT}" class="button2" style="padding-top:3px; padding-bottom:3px;" >{L_MORE_COMMENT}</a></fieldset>
-		<!-- ELSE -->
-			<fieldset class="submit-buttons">
-			<!-- IF F_SENDCOM --><a href="{postrow.SEND_COMMENT}" class="button2" style="padding-top:3px; padding-bottom:3px;">{L_SEND_COMMENT}</a><!-- ENDIF -->
-			<a href="{postrow.MORE_COMMENT}" value="{L_MORE_COMMENT}" class="button2" style="padding-top:3px; padding-bottom:3px;">{L_MORE_COMMENT}</a></fieldset>
-		<!-- ENDIF -->
-		<!-- ENDIF -->
-		<!-- ENDIF -->]]></action>
+	</div>
+	<!-- ENDIF -->
+<!-- ENDIF -->]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[<!-- INCLUDE overall_footer.html -->]]></find>
+				<action type="before-add"><![CDATA[<script type="text/javascript">
+// variables
+var maxlimit = '{MAX_COMMENTS_CHAR}';
+var minlimit = '{MIN_COMMENTS_CHAR}';
+// Language variables
+var langsendtitle = '{L_SEND_COMMENT_TITLE}';
+var langsubmit = '{L_SUBMIT}';
+var langcomdelete = '{L_COMMENT_DELETE_CONFIRM}';
+var langcomdeletetitle = '{L_COMMENT_DELETE_CONFIRM_TITLE}';
+var langyes = '{L_YES}';
+var langno = '{L_NO}';
+var langmaxcharerror = '{MAX_CHAR_ERROR}';
+var langmincharerror = '{MIN_CHAR_ERROR}';
+var langcharerrortitle = '{L_CHARACHTER_LIMIT_ERROR}';
+var langeditcomment = '{L_COMMENT_EDIT_TITLE}';
+// display handling
+$("#commentsending").css("display", "none");
+</script>]]></action>
 			</edit>
 		</open>
 		<php-installer><![CDATA[comment_mod_install.php]]></php-installer>

@@ -31,15 +31,18 @@ if (empty($lang) || !is_array($lang))
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
                         
 $lang = array_merge($lang, array(
+	'CHARACHTER_LIMIT_ERROR'        => 'Character error',
     'CHARACHTER_LIMIT_MAX'          => 'The maximum allowed length is %s.',
 	'CHARACHTER_LIMIT_MIN'          => 'The minimum allowed length is %s.',
 	'COMMENT_DELETE_CONFIRM'		=> 'Are you sure you want to delete this comment?',
+	'COMMENT_DELETE_CONFIRM_TITLE'	=> 'Delete confirmation',
     'COMMENT_DELETE_LOGIN'			=> 'You need to login in order to delete this comment.',
 	'COMMENT_DELETE_PERMISSION'		=> 'You are not allowed to delete this comment.',
 	'COMMENT_DELETE_SUCCESS'		=> 'This comment has been deleted successfully.',
     'COMMENT_EDIT_LOGIN'			=> 'You need to login in order to edit this comment.',
 	'COMMENT_EDIT_PERMISSION'		=> 'You are not allowed to edit this comment.',
 	'COMMENT_EDIT_SUCCESS'			=> 'This comment has been edited successfully.',
+	'COMMENT_EDIT_TITLE'			=> 'Edit comment',
     'COMMENT_PM'					=> '%sYour post%s has recieved new comment by %s: %s',
     'COMMENT_PM_SUBJECT'			=> 'New comment notification',                     
     'COMMENT_SUBMIT_SUCCESS'		=> 'Your comment has been posted successfully.',

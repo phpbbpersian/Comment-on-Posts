@@ -142,7 +142,7 @@ function show_comment($post_rowid, $topic_id, $forum_id)
 			break;
 		}
 	}
-	generate_smilies('inline', $forum_id, 'comments');
+
 
 
 }
@@ -225,19 +225,16 @@ function delete_comment($forum_id, $topic_id, $post_id, $cdelete_id)
 {
 	global $db, $user, $phpbb_root_path, $phpEx;
 	
-    if (confirm_box(true))
-    {
+	$confirm = request_var('confirm', 0);
+	if ($confirm == 1)
+	{
 		$sql = 'DELETE FROM ' . COMMENTS_TABLE . ' 
 				WHERE id = ' . $cdelete_id . '';
 		$db->sql_query($sql);
 		$comment_redirect = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;p=$post_id#p$post_id");
 		$comsuccess = $user->lang['COMMENT_DELETE_SUCCESS'] . '<br /><br />' . sprintf($user->lang['RETURN_POST'], '<a href="' . $comment_redirect . '">', '</a>');
 		trigger_error($comsuccess);
-    }
-    else
-    {
-		confirm_box(false,$user->lang['COMMENT_DELETE_CONFIRM']);
-    }
+	}
 }
 function edit_comment($cedit_id)
 {

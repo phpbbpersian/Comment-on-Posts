@@ -31,15 +31,18 @@ if (empty($lang) || !is_array($lang))
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
                         
 $lang = array_merge($lang, array(
+	'CHARACHTER_LIMIT_ERROR'        => 'خطای کاراکتر',
     'CHARACHTER_LIMIT_MAX'          => 'دیدگاه ارسالی حداکثر باید %s کاراکتر باشد.',
 	'CHARACHTER_LIMIT_MIN'          => 'دیدگاه ارسالی حداقل باید %s کاراکتر باشد.',
 	'COMMENT_DELETE_CONFIRM'		=> 'آیا از حذف این دیدگاه مطمئن هستید ؟',
+	'COMMENT_DELETE_CONFIRM_TITLE'	=> 'تایید حذف',
     'COMMENT_DELETE_LOGIN'			=> 'برای حذف دیدگاه باید وارد شوید.',
 	'COMMENT_DELETE_PERMISSION'		=> 'اجازه حذف این دیدگاه را ندارید.',
 	'COMMENT_DELETE_SUCCESS'		=> 'یدگاه با موفقیت حذف شد.',
     'COMMENT_EDIT_LOGIN'			=> 'برای ویرایش دیدگاه باید وارد شوید.',
 	'COMMENT_EDIT_PERMISSION'		=> 'اجازه ویرایش این دیدگاه را ندارید.',
 	'COMMENT_EDIT_SUCCESS'			=> 'دیدگاه با موفقیت ویرایش شد.',
+	'COMMENT_EDIT_TITLE'			=> 'ویرایش دیدگاه',
     'COMMENT_PM'					=> 'دیدگاه جدیدی در %sاین پست%s شما، توسط %s ارسال شده است. %s',
     'COMMENT_PM_SUBJECT'			=> 'دیدگاه جدیدی در پست شما ارسال شده است',                     
     'COMMENT_SUBMIT_SUCCESS'		=> 'دیدگاه با موفقیت ثبت شد.',
