@@ -94,7 +94,7 @@ function show_comment($post_rowid, $topic_id, $forum_id)
 				trigger_error($comerror);
 			}
 		}
-		if ($cedit_id && $auth->acl_get('f_comedit', $forum_id) && !$auth->acl_get('m_comdedit', $forum_id))
+		if ($cedit_id && $auth->acl_get('f_comedit', $forum_id) && !$auth->acl_get('m_comedit'))
 		{
 			$sql = 'SELECT poster_id
 				FROM ' . COMMENTS_TABLE . ' 
