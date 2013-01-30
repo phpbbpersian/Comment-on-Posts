@@ -203,7 +203,9 @@ $template->assign_vars(array(
 			<edit>
 				<find><![CDATA[<script type="text/javascript" src="{T_SUPER_TEMPLATE_PATH}/forum_fn.js"></script>]]></find>
 				<action type="after-add"><![CDATA[<script type="text/javascript" src="{T_SUPER_TEMPLATE_PATH}/js/jquery.js"></script>
-<script src="{T_SUPER_TEMPLATE_PATH}/js/comments.js"></script> ]]></action>
+<script type="text/javascript" src="{T_SUPER_TEMPLATE_PATH}/js/jquery-ui.js"></script>
+<script src="{T_SUPER_TEMPLATE_PATH}/js/comments.js"></script>
+<link href="{T_SUPER_TEMPLATE_PATH}/js/jquery-ui.css" rel="stylesheet" type="text/css" />]]></action>
 			</edit>
 		</open>
 		<open src="styles/prosilver/template/viewtopic_body.html">
