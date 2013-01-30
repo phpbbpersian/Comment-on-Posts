@@ -210,8 +210,9 @@ $template->assign_vars(array(
 		</open>
 		<open src="styles/prosilver/template/viewtopic_body.html">
 			<edit>
-				<find><![CDATA[			<!-- IF postrow.BUMPED_MESSAGE --><div class="notice"><br /><br />{postrow.BUMPED_MESSAGE}</div><!-- ENDIF -->]]></find>
-				<action type="after-add"><![CDATA[		<!-- IF ENABLE_COMMENTS -->
+				<find><![CDATA[			<div class="content">{postrow.MESSAGE}</div>]]></find>
+				<action type="after-add"><![CDATA[		<br /><br />
+		<!-- IF ENABLE_COMMENTS -->
 		<!-- IF U_SEECOM -->
 		<div id="scrollpoint{postrow.POST_ID}"></div>
 		<!-- BEGIN comment -->
