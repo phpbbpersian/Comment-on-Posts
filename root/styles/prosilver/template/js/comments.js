@@ -29,7 +29,7 @@ function ajax_edit_form(postid, posterid, commentid, limit, path){
 					
 				$.post(""+ path +"?p="+ postid +"&limit="+ limit +"&ce="+ commentid +"", { comment: message, post_id: post_id, poster: poster, commentupdate: commentsubmit},
 				function(data){
-					if (message.length > maxlimit) {
+					if (message.length > maxlimit && message.length === "0") {
 						$('<div></div>').appendTo('body')
 						.html(langmaxcharerror)
 						.dialog({
@@ -117,7 +117,7 @@ function ajax_send_form(action, posterid, postid, limit, path){
 					
 				$.post(action, { comment: message, post_id: post_id, poster: poster, commentsubmit: commentsubmit},
 				function(data){
-					if (message.length > maxlimit) {
+					if (message.length > maxlimit && message.length === "0") {
 						$('<div></div>').appendTo('body')
 						.html(langmaxcharerror)
 						.dialog({
