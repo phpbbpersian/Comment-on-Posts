@@ -212,7 +212,7 @@ $template->assign_vars(array(
 			<edit>
 				<find><![CDATA[			<!-- IF postrow.SIGNATURE --><div id="sig{postrow.POST_ID}" class="signature">{postrow.SIGNATURE}</div><!-- ENDIF -->
 		<!-- ENDIF -->]]></find>
-				<action type="after-add"><![CDATA[		<!-- IF ENABLE_COMMENTS -->
+				<action type="before-add"><![CDATA[		<!-- IF ENABLE_COMMENTS -->
 		<!-- IF U_SEECOM -->
 		<div id="scrollpoint{postrow.POST_ID}"></div>
 		<!-- BEGIN comment -->
