@@ -224,4 +224,4 @@ function ajax_delete_comment(postid, commentid, limit, path){
                         }
                     });
 	});
-}
+} 
