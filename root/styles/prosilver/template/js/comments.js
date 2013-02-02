@@ -4,8 +4,17 @@
 */
 
 function ajax_edit_form(postid, posterid, commentid, limit, path){
-	$(document).ready(function(){ 
+	$(document).ready(function(){
+
 	$("#commentsending").load(""+ path +"?p="+ postid +"&limit="+ limit +"&ce="+ commentid +"" + " #commentsending>*", "");
+	
+		$("#commentsending").keyup(function(){
+			$("#charremain").css("display", "block");
+			var messagelength = $("#commentsending textarea#message").val().length;	
+			var remainchar = maxlimit - messagelength;
+			$("#charremain").html("" + langremainchar + " " + remainchar + "");
+		}); 
+		
 		$('<div></div>').appendTo('body')
 			$("#commentsending")
             .dialog({
@@ -29,7 +38,7 @@ function ajax_edit_form(postid, posterid, commentid, limit, path){
 					
 				$.post(""+ path +"?p="+ postid +"&limit="+ limit +"&ce="+ commentid +"", { comment: message, post_id: post_id, poster: poster, commentupdate: commentsubmit},
 				function(data){
-					if (message.length > maxlimit && message.length === "0") {
+					if (message.length > maxlimit && maxlimit != "0") {
 						$('<div></div>').appendTo('body')
 						.html(langmaxcharerror)
 						.dialog({
@@ -84,6 +93,7 @@ function ajax_edit_form(postid, posterid, commentid, limit, path){
                 $("#commentsending").dialog("destroy");
                 $(this).removeClass();
                 $(this).removeAttr("style");
+				$("#charremain").css("display", "none");
 				$("#commentsending").css("display", "none");
 
                 
@@ -94,7 +104,14 @@ function ajax_edit_form(postid, posterid, commentid, limit, path){
 }
 function ajax_send_form(action, posterid, postid, limit, path){
 	$(document).ready(function(){
-			
+	
+		$("#commentsending textarea#message").keyup(function(){
+			$("#charremain").css("display", "block");
+			var messagelength = $("#commentsending textarea#message").val().length;	
+			var remainchar = maxlimit - messagelength;
+			$("#charremain").html("" + langremainchar + " " + remainchar + "");
+		});
+		
 		$('<div></div>').appendTo('body')
 			$("#commentsending")
             .dialog({
@@ -117,7 +134,7 @@ function ajax_send_form(action, posterid, postid, limit, path){
 					
 				$.post(action, { comment: message, post_id: post_id, poster: poster, commentsubmit: commentsubmit},
 				function(data){
-					if (message.length > maxlimit && message.length === "0") {
+					if (message.length > maxlimit && maxlimit != "0") {
 						$('<div></div>').appendTo('body')
 						.html(langmaxcharerror)
 						.dialog({
@@ -173,6 +190,7 @@ function ajax_send_form(action, posterid, postid, limit, path){
                 $("#commentsending").dialog("destroy");
                 $(this).removeClass();
                 $(this).removeAttr("style");
+				$("#charremain").css("display", "none");
 				$("#commentsending").css("display", "none");
 
                         }

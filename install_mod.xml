@@ -19,7 +19,7 @@ Do not forget to set permissions otherwise mod would be disabled.]]></author-not
 				<email><![CDATA[phpbbpersian@gmail.com]]></email>
 			</author>
 		</author-group>
-		<mod-version>0.6.0</mod-version>
+		<mod-version>0.7.0</mod-version>
 		<installation>
 			<level>easy</level>
 			<time>300</time>
@@ -52,6 +52,13 @@ Do not forget to set permissions otherwise mod would be disabled.]]></author-not
 				<rev-version>0.6.0</rev-version>
 				<changelog lang="en">
 					<change><![CDATA[New ajax features (loading forms, deleting comments, pagination). AJAX milestone is completed.]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2013-02-02</date>
+				<rev-version>0.7.0</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[New feature (Live character remain count)]]></change>
 				</changelog>
 			</entry>
 		</history>
@@ -287,6 +294,9 @@ $template->assign_vars(array(
 				{S_FORM_TOKEN}
 			</form>
 		</div>
+		<!-- IF MAX_COMMENTS_CHAR neq '0' -->
+		<div id="charremain"></div>
+		<!-- ENDIF -->
 	</div>
 	<!-- ENDIF -->
 <!-- ENDIF -->]]></action>
@@ -308,6 +318,7 @@ var langmaxcharerror = '{MAX_CHAR_ERROR}';
 var langmincharerror = '{MIN_CHAR_ERROR}';
 var langcharerrortitle = '{L_CHARACHTER_LIMIT_ERROR}';
 var langeditcomment = '{L_COMMENT_EDIT_TITLE}';
+var langremainchar = '{L_REMAINED_CHAR}';
 // display handling
 $("#commentsending").css("display", "none");
 </script>]]></action>
