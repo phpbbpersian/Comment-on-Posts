@@ -52,6 +52,7 @@ function show_comment($post_rowid, $topic_id, $forum_id)
 	}
 	$getcomment = $db->sql_fetchrowset($result);
 	$db->sql_freeresult($result);
+
 	$i = 0;
 	foreach ($getcomment as $commentbody)
 	{
@@ -71,11 +72,11 @@ function show_comment($post_rowid, $topic_id, $forum_id)
 
 		if ($cdelete_id && !$user->data['is_registered']) 
 		{
-			login_box('', $user->lang['COMMENT_DELETE_LOGIN']);
+			exit();
 		}
 		if ($cedit_id && !$user->data['is_registered']) 
 		{
-			login_box('', $user->lang['COMMENT_EDIT_LOGIN']);
+			exit();
 		}
 
 		if ($cdelete_id && $auth->acl_get('f_comdelete', $forum_id) && !$auth->acl_get('m_comdelete')) 
@@ -89,9 +90,7 @@ function show_comment($post_rowid, $topic_id, $forum_id)
 			
 			if ($user->data['user_id'] != $poster['poster_id']) 
 			{
-				$comment_redirect = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "t=$topic_id&amp;p=$post_rowid" . (($start == 0) ? '' : "&amp;start=$start") ."#p$post_rowid");
-				$comerror = $user->lang['COMMENT_DELETE_PERMISSION'] . '<br /><br />' . sprintf($user->lang['RETURN_POST'], '<a href="' . $comment_redirect . '">', '</a>');
-				trigger_error($comerror);
+				exit();
 			}
 		}
 		if ($cedit_id && $auth->acl_get('f_comedit', $forum_id) && !$auth->acl_get('m_comedit'))
@@ -105,9 +104,7 @@ function show_comment($post_rowid, $topic_id, $forum_id)
 			
 			if ($user->data['user_id'] != $poster['poster_id']) 
 			{
-				$comment_redirect = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "t=$topic_id&amp;p=$post_rowid" . (($start == 0) ? '' : "&amp;start=$start") ."#p$post_rowid");
-				$comerror = $user->lang['COMMENT_EDIT_PERMISSION'] . '<br /><br />' . sprintf($user->lang['RETURN_POST'], '<a href="' . $comment_redirect . '">', '</a>');
-				trigger_error($comerror);
+				exit();
 			}
 		}
 		
@@ -148,7 +145,7 @@ function show_comment($post_rowid, $topic_id, $forum_id)
 }
 function add_comment($box_id, $topic_id, $forum_id) 
 {
-	global $db, $start, $config, $phpbb_root_path, $user, $errors, $phpEx;
+	global $db, $start, $config, $phpbb_root_path, $topic_data, $user, $errors, $auth, $phpEx;
 
 	$form_key = 'send_comment';
 	add_form_key($form_key);
@@ -162,9 +159,7 @@ function add_comment($box_id, $topic_id, $forum_id)
 
 		if ((($config['max_comments_char'] == 0) ? '' : mb_strlen($text) > $config['max_comments_char']) ^ mb_strlen($text) < $config['min_comments_char'])
 		{
-			$comment_redirect = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "t=$topic_id&amp;box=$box_id" . (($start == 0) ? '' : "&amp;start=$start") ."#sendcomment");
-			$comlenerror = (mb_strlen($text) > $config['max_comments_char'] ? sprintf($user->lang['CHARACHTER_LIMIT_MAX'], $config['max_comments_char']) :  sprintf($user->lang['CHARACHTER_LIMIT_MIN'], $config['min_comments_char'])) . '<br /><br />' . sprintf($user->lang['RETURN_COMMENT_SEND'], '<a href="' . $comment_redirect . '">', '</a>');
-			trigger_error($comlenerror);
+			exit();
 		}
 	$uid = $bitfield = $options = '';
 	$allow_bbcode = $allow_urls = $allow_smilies = true;
@@ -184,7 +179,9 @@ function add_comment($box_id, $topic_id, $forum_id)
 		'enable_smilies'    => $allow_smilies,
 	);
 		
-	
+	if (!$auth->acl_get('f_sendcom', $forum_id) || $topic_data['topic_status'] == 1) {
+		exit();
+	}
 	$sql = 'INSERT INTO ' . COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
 	$db->sql_query($sql);
 	$post_address = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id" . (($start == 0) ? '' : "&amp;start=$start") ."#p$box_id");
@@ -192,7 +189,7 @@ function add_comment($box_id, $topic_id, $forum_id)
 	include_once($phpbb_root_path . 'includes/functions_privmsgs.' . $phpEx);
 	
 	$touser = request_var('poster', 0);
-	$message = "".sprintf($user->lang['COMMENT_PM'], '<a href="' . $post_address . '">', '</a>',$user->data['username'], '<br />[quote]'.utf8_normalize_nfc(request_var('comment', '')).'[/quote]');	
+	$message = "".sprintf($user->lang['COMMENT_PM'], '<a href="' . $post_address . '">', '</a>',$user->data['username'], '<br />[quote]'.utf8_normalize_nfc(request_var('comment', '', true)).'[/quote]');	
 	$uid = $bitfield = $options = '';
 	$allow_bbcode = $allow_smilies = $allow_urls = true;
 	generate_text_for_storage($message, $uid, $bitfield, $options, $allow_bbcode, $allow_urls, $allow_smilies);
@@ -216,9 +213,7 @@ function add_comment($box_id, $topic_id, $forum_id)
 
 	submit_pm('post', $user->lang['COMMENT_PM_SUBJECT'], $pm_data, true, false);
 
-	$comment_redirect = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;p=$box_id" . (($start == 0) ? '' : "&amp;start=$start") ."#p$box_id");
-	$comsuccess = $user->lang['COMMENT_SUBMIT_SUCCESS'] . '<br /><br />' . sprintf($user->lang['RETURN_POST'], '<a href="' . $comment_redirect . '">', '</a>');
-	trigger_error($comsuccess);
+
 
 }
 function delete_comment($forum_id, $topic_id, $post_id, $cdelete_id)
@@ -231,9 +226,7 @@ function delete_comment($forum_id, $topic_id, $post_id, $cdelete_id)
 		$sql = 'DELETE FROM ' . COMMENTS_TABLE . ' 
 				WHERE id = ' . $cdelete_id . '';
 		$db->sql_query($sql);
-		$comment_redirect = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;p=$post_id#p$post_id");
-		$comsuccess = $user->lang['COMMENT_DELETE_SUCCESS'] . '<br /><br />' . sprintf($user->lang['RETURN_POST'], '<a href="' . $comment_redirect . '">', '</a>');
-		trigger_error($comsuccess);
+
 	}
 }
 function edit_comment($cedit_id)
@@ -269,10 +262,7 @@ function update_comment($forum_id, $topic_id, $post_id, $cedit_id)
 		
 		if ((($config['max_comments_char'] == 0) ? '' : mb_strlen($text) > $config['max_comments_char']) ^ mb_strlen($text) < $config['min_comments_char'])
 		{
-			$limit = request_var('limit', 0); 
-			$comment_redirect =  append_sid("{$phpbb_root_path}viewtopic.$phpEx", "t=$topic_id&amp;p=$post_id" . (($limit == NULL) ? '' : "&amp;limit=".((($limit == $config['comments_limit']) ? $config['comments_limit'] : $limit))."") ."" . (($start == 0) ? '' : "&amp;start=$start") ."&amp;ce=$cedit_id#c$cedit_id");
-			$comlenerror = (mb_strlen($text) > $config['max_comments_char'] ? sprintf($user->lang['CHARACHTER_LIMIT_MAX'], $config['max_comments_char']) :  sprintf($user->lang['CHARACHTER_LIMIT_MIN'], $config['min_comments_char'])) . '<br /><br />' . sprintf($user->lang['RETURN_COMMENT_EDIT'], '<a href="' . $comment_redirect . '">', '</a>');
-			trigger_error($comlenerror);
+			exit();
 		}
 	
 	$uid = $bitfield = $options = '';
@@ -295,8 +285,6 @@ function update_comment($forum_id, $topic_id, $post_id, $cedit_id)
 	$sql = 'UPDATE ' . COMMENTS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . ' WHERE id = ' . $cedit_id . '';
 	$result = $db->sql_query($sql);
 	$db->sql_freeresult($result);
-	$comment_redirect = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;p=$post_id#p$post_id");
-	$comsuccess = $user->lang['COMMENT_EDIT_SUCCESS'] . '<br /><br />' . sprintf($user->lang['RETURN_POST'], '<a href="' . $comment_redirect . '">', '</a>');
-	trigger_error($comsuccess);
+
 }
 ?>
