@@ -65,7 +65,7 @@ Do not forget to set permissions otherwise mod would be disabled.]]></author-not
 				<date>2013-2-22</date>
 				<rev-version>1.0.0</rev-version>
 				<changelog lang="en">
-					<change><![CDATA[Lock comments with locking topic, Show more comments button if actually there are more comments, Multilingual character support [bugfix], Other minor changes.]]></change>
+					<change><![CDATA[Lock comments with locking topic, Delete all comments on a post, Show more comments button if actually there are more comments, Multilingual character support [bugfix], Other minor changes.]]></change>
 				</changelog>
 			</entry>
 		</history>
@@ -101,6 +101,7 @@ include($phpbb_root_path . 'includes/functions_comments.' . $phpEx);
 $cedit_id 	= request_var('ce', 0); 
 $cdelete_id = request_var('cd', 0); 
 $box_id		= request_var('box', 0);
+$deleteall = request_var('deleteall', 0);
 $user->setup('mods/comments');
 // END Comment on Posts]]></action>
 			</edit>
@@ -177,6 +178,7 @@ $template->assign_vars(array(
 	'ENABLE_COMMENTS'		=> ($config['enable_comments'] == 1) ? true : false,
 	'U_SEECOM'				=> $auth->acl_get('u_seecom'),
 	'F_SENDCOM'				=> $auth->acl_get('f_sendcom', $forum_id),
+	'M_COMDELETE'			=> $auth->acl_get('m_comdelete'),
 	'LIMIT' 				=> request_var('limit', 0),
 	'COMMENT_PATH'			=> append_sid("{$phpbb_root_path}viewtopic.$phpEx"),
 	'MAX_COMMENTS_CHAR'		=> $config['max_comments_char'],
@@ -202,6 +204,11 @@ if ($commentupdate)
 if ($cdelete_id) 
 {
 	delete_comment($forum_id, $topic_id, $post_id, $cdelete_id);
+}
+
+if ($deleteall) 
+{
+	delete_all_comments($deleteall);
 }
 // AJAX variables
 $template->assign_vars(array(
@@ -238,7 +245,7 @@ $template->assign_vars(array(
 		<!-- IF ENABLE_COMMENTS -->
 		<!-- IF U_SEECOM -->
 		<div id="scrollpoint{postrow.POST_ID}"></div>
-		<!-- IF postrow.COMMENTCOUNT neq 0 --><div class="commenttitle <!-- IF postrow.S_ROW_COUNT is odd -->bg2<!-- ELSE -->bg1<!-- ENDIF -->">{postrow.COMMENTCOUNT}</div><!-- ENDIF -->
+		<!-- IF postrow.COMMENTCOUNT neq 0 --><div class="commenttitle <!-- IF postrow.S_ROW_COUNT is odd -->bg2<!-- ELSE -->bg1<!-- ENDIF -->">{postrow.COMMENTCOUNT}<!-- IF M_COMDELETE -->  <a href="#" onclick="ajax_delete_all_comments('{postrow.POST_ID}', '{LIMIT}', '{COMMENT_PATH}'); return false;"><span>[Delete comments]</span></a><!-- ENDIF --></div><!-- ENDIF -->
 		<!-- BEGIN comment -->
 			<div id="c{comment.COMMENT_ID}" class="post <!-- IF postrow.S_ROW_COUNT is odd -->bg2<!-- ELSE -->bg1<!-- ENDIF -->" style="-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;">
 				<div class="inner"><span class="corners-top" style="background-image:none;"><span style="background-image:none;"></span></span>
@@ -329,6 +336,7 @@ var langsendtitle = '{L_SEND_COMMENT_TITLE}';
 var langsubmit = '{L_SUBMIT}';
 var langcomdelete = '{L_COMMENT_DELETE_CONFIRM}';
 var langcomdeletetitle = '{L_COMMENT_DELETE_CONFIRM_TITLE}';
+var commentdeleteallconfirm = '{L_COMMENT_DELETE_ALL_CONFIRM}';
 var langyes = '{L_YES}';
 var langno = '{L_NO}';
 var langmaxcharerror = '{MAX_CHAR_ERROR}';
@@ -362,6 +370,10 @@ text-align: center;
 padding-top: 10px;
 padding-bottom: 10px;
 color: rgb(109, 109, 109);
+}
+
+.commenttitle span {
+font-size: 10px;
 }]]></action>
 			</edit>
 		</open>

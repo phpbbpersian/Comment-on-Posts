@@ -242,4 +242,42 @@ function ajax_delete_comment(postid, commentid, limit, path){
                         }
                     });
 	});
-} 
+}
+function ajax_delete_all_comments(postid, limit, path){
+	$(document).ready(function(){
+
+		$('<div></div>').appendTo('body')
+			.html(commentdeleteallconfirm)
+            .dialog({
+                modal: true,
+				closeOnEscape: true,
+				title: langcomdeletetitle,
+				zIndex: 10000,
+				autoOpen: true,
+                width: 'auto',
+				height: 'auto',
+				position: 'center',
+				resizable: false,
+				buttons: [{
+					text: langyes,
+					click: function () {
+            			$.get(""+ path +"?p="+ postid +"&deleteall="+ postid +"&confirm=1", { },
+						function(data){
+							$("#p"+ postid +"").load(""+ path +"?p="+ postid +"&limit="+ limit +"" + " #p"+ postid +">*", "");
+							$('html, body').animate({scrollTop:$("#p"+ postid +"").position().top}, 'slow');
+							
+					});
+						$(this).remove();
+					},
+				}, {
+					text: langno,
+					click: function () {
+					$(this).remove(); 
+					},
+				}],
+                close: function (event, ui) {
+                            $(this).remove();
+                        }
+                    });
+	});
+}

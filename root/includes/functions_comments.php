@@ -216,15 +216,28 @@ function add_comment($box_id, $topic_id, $forum_id)
 
 
 }
-function delete_comment($forum_id, $topic_id, $post_id, $cdelete_id)
+function delete_comment($cdelete_id)
 {
-	global $db, $user, $phpbb_root_path, $phpEx;
+	global $db;
 	
 	$confirm = request_var('confirm', 0);
 	if ($confirm == 1)
 	{
 		$sql = 'DELETE FROM ' . COMMENTS_TABLE . ' 
 				WHERE id = ' . $cdelete_id . '';
+		$db->sql_query($sql);
+
+	}
+}
+function delete_all_comments($post_id)
+{
+	global $db;
+	
+	$confirm = request_var('confirm', 0);
+	if ($confirm == 1)
+	{
+		$sql = 'DELETE FROM ' . COMMENTS_TABLE . ' 
+				WHERE post_id = ' . $post_id . '';
 		$db->sql_query($sql);
 
 	}

@@ -35,6 +35,7 @@ $lang = array_merge($lang, array(
     'CHARACHTER_LIMIT_MAX'          => 'دیدگاه ارسالی حداکثر باید %s کاراکتر باشد.',
 	'CHARACHTER_LIMIT_MIN'          => 'دیدگاه ارسالی حداقل باید %s کاراکتر باشد.',
 	'COMMENT_DELETE_CONFIRM'		=> 'آیا از حذف این دیدگاه مطمئن هستید ؟',
+	'COMMENT_DELETE_ALL_CONFIRM'	=> 'آیا از حذف تمامی دیدگاه های این پست مطمئن هستید ؟',
 	'COMMENT_DELETE_CONFIRM_TITLE'	=> 'تایید حذف',
 	'COMMENT_EDIT_TITLE'			=> 'ویرایش دیدگاه',
     'COMMENT_PM'					=> 'دیدگاه جدیدی در %sاین پست%s شما، توسط %s ارسال شده است. %s',

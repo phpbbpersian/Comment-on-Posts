@@ -35,6 +35,7 @@ $lang = array_merge($lang, array(
     'CHARACHTER_LIMIT_MAX'          => 'The maximum allowed length is %s.',
 	'CHARACHTER_LIMIT_MIN'          => 'The minimum allowed length is %s.',
 	'COMMENT_DELETE_CONFIRM'		=> 'Are you sure you want to delete this comment?',
+	'COMMENT_DELETE_ALL_CONFIRM'	=> 'Are you sure you want to delete all comments on this post?',
 	'COMMENT_DELETE_CONFIRM_TITLE'	=> 'Delete confirmation',
 	'COMMENT_EDIT_TITLE'			=> 'Edit comment',
     'COMMENT_PM'					=> '%sYour post%s has recieved new comment by %s: %s',
