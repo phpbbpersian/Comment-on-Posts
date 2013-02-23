@@ -203,7 +203,7 @@ if ($commentupdate)
 
 if ($cdelete_id) 
 {
-	delete_comment($forum_id, $topic_id, $post_id, $cdelete_id);
+	delete_comment($cdelete_id);
 }
 
 if ($deleteall) 
@@ -358,8 +358,7 @@ $("#commentsending").css("display", "none");
 	line-height: 1px;
 	background: transparent;
 }]]></find>
-				<action type="after-add"><![CDATA[
-.commenttitle {
+				<action type="after-add"><![CDATA[.commenttitle {
 -webkit-border-radius: 10px;
 -moz-border-radius: 10px;
 border-radius: 10px;
